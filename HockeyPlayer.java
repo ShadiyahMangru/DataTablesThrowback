@@ -40,24 +40,24 @@ public class HockeyPlayer{
 	}
 
 	//setter
-	public void setTeam(String team){
+	void setTeam(String team){
 		this.team = team;	
 	}
 	
 	//getters
-	public String getLastName(){
+	String getLastName(){
 		return lastName;
 	}
 	
-	public String getPosition(){
+	String getPosition(){
 		return position;
 	}	
 	
-	public int getJersey(){
+	int getJersey(){
 		return jersey;
 	}
 	
-	public String getTeam(){
+	String getTeam(){
 		return team;	
 	}
 	
