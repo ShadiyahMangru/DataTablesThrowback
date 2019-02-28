@@ -13,7 +13,7 @@ import java.util.function.*;
 public class LoadData{
 	//field
 	private Scanner sc;
-	private final String fileLoc = "C:\\Users\\593476\\Desktop\\Java Programs\\2019WSHStats.txt";
+	private final String fileLoc = "C:\\Users\\593476\\Desktop\\Java Programs\\TabularHockeyData\\2019WSHStats.txt";
 	
 	//constructor
 	public LoadData(){
@@ -43,7 +43,6 @@ public class LoadData{
 	
 	//utility Lambdas
 
-	//the Supplier Functional Interface may be used to generate or supply values without taking any input
 	//read in a line of data from input file with no leading and no trailing whitespace
 	public Supplier<String> vals = () -> {return sc.nextLine().trim();};
 	
@@ -56,7 +55,6 @@ public class LoadData{
     		return new HockeyPlayer(name, position, jersey);
 	};
 	
-	//the Function Functional Interface turns a parameter into a value of a potentially different type and returns it
 	//this lambda accepts a HockeyPlayer and, after reading-in goals and shots values, initializes and returns a new skater object 
 	public Function<HockeyPlayer, Skater> setSkater = hp ->{
 		try{ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
@@ -86,5 +84,4 @@ public class LoadData{
 			return g;
 		}
 	};
-	
 }
