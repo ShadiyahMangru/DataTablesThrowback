@@ -13,6 +13,11 @@
 //the utility Lambdas calculate and set skater's shooting percentage, respectively.
 //the utility method sorts skaters by goals scored; players with equal goals are sorted by last name.
 
+//the utility method reference defines a Comparator to sort Skaters in descending order by goals; 
+//when players tie for goals, they are sorted in ascending order by last name
+//the next utility method provides a static method to print a Skater Stats data table
+
+import java.util.*;
 import java.util.function.*;
 
 public class Skater extends HockeyPlayer{
@@ -38,7 +43,7 @@ public class Skater extends HockeyPlayer{
 		this.shots = shots;	
 	}
 	
-	public void setShootingPercent(float shootingPercent){
+	private void setShootingPercent(float shootingPercent){
 		this.shootingPercent = shootingPercent;	
 	}
 	
@@ -65,11 +70,28 @@ public class Skater extends HockeyPlayer{
 	};
 	
 	//this accepts a shooting percentage and a skater, and sets that skater object's shooting percentage field
-	public static BiConsumer<Float, Skater> setShootPer = (sp, sk) -> {
+	public BiConsumer<Float, Skater> setShootPer = (sp, sk) -> {
 		sk.setShootingPercent(sp);	
 	};
 	
-	//utility methods
+	//this Lambda sets team of HockeyPlayer object,
+	//casts HockeyPlayer object to Skater object
+	//calculates and sets Skater object's shooting percentage
+	//returns Skater object
+	private static Function<HockeyPlayer, Skater> SKTeamAndShPercent = hp ->{
+		hp.setTeam(hp.assignTeam.get()); //calls Supplier
+		Skater s = (Skater)hp; //narrowing cast of HockeyPlayer object to a Skater object
+		Float calcSP = s.shootPer.apply(s.getGoals(), s.getShots()); //calls BiFunction
+		s.setShootPer.accept(calcSP, s); //calls BiConsumer
+		return s;
+	};
+	
+	public static Consumer<HockeyPlayer> printSKShootPercent = hp -> {
+		Skater s = SKTeamAndShPercent.apply(hp);
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", s.getTeam(), s.getLastName(), s.getJersey(), s.getGoals() , s.getShootingPercent()));
+	};
+	
+	//utility method
 	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
 	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
 	public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
@@ -86,4 +108,23 @@ public class Skater extends HockeyPlayer{
 		}
 		return 0;
 	}	
+	
+	//utility method reference
+	//Comparator that sorts HockeyPlayers (who are Not Goalies) by goals then lastname, written with a Java SE 8 method reference
+	static Comparator<HockeyPlayer> byGoalsThenName = Skater :: compareByGoalsThenName;
+	
+	//utility method
+	//this method accepts an ArrayList<HockeyPlayer> team parameter, removes Goalies from input stream, sorts stream by goals then name,
+	//then outputs to screen a Skater Stats data table
+	public static void printSkaterStats(ArrayList<HockeyPlayer> team){
+		System.out.println("\n******* Goals Scored by and Shooting Percentages of WSH Forwards and Defense (since 2/26/2019) *******\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Shooting %"));
+		System.out.println("---------------------------------------------------------------");
+		team.stream()
+		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
+		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
+		.sorted(byGoalsThenName) //sort stream with a Comparator!
+		.forEach(sk -> printSKShootPercent.accept(sk)); //calls printSKShootPercent
+		System.out.println("\n****************************************************************");	
+	}
 }
