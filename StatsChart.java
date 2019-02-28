@@ -2,18 +2,17 @@ import java.util.*;
 import java.util.function.*;
 public class StatsChart{
 	//Comparator that sorts HockeyPlayers (who are Not Goalies) by goals then lastname, written with a Java SE 8 method reference
-	static Comparator<HockeyPlayer> byGoalsThenName = SkaterComparisons :: compareByGoalsThenName;
+	static Comparator<HockeyPlayer> byGoalsThenName = Skater :: compareByGoalsThenName;
 	
-	//the Function Functional Interface turns a parameter into a value of a potentially different type and returns it
 	//this Lambda sets team of HockeyPlayer object,
 	//casts HockeyPlayer object to Skater object
 	//calculates and sets Skater object's shooting percentage
 	//returns Skater object
 	public Function<HockeyPlayer, Skater> SKTeamAndShPercent = hp ->{
-		hp.setTeam(Lambdas.assignTeam.get()); //calls Supplier
+		hp.setTeam(hp.assignTeam.get()); //calls Supplier
 		Skater s = (Skater)hp; //narrowing cast of HockeyPlayer object to a Skater object
-		Float calcSP = Lambdas.shootPer.apply(s.getGoals(), s.getShots()); //calls BiFunction
-		Lambdas.setShootPer.accept(calcSP, s); //calls BiConsumer
+		Float calcSP = s.shootPer.apply(s.getGoals(), s.getShots()); //calls BiFunction
+		s.setShootPer.accept(calcSP, s); //calls BiConsumer
 		return s;
 	};
 	
@@ -22,10 +21,10 @@ public class StatsChart{
 	//calculates and sets Goalie object's save percentage
 	//returns Goalie object
 	public Function<HockeyPlayer, Goalie> GTeamAndSavePercent = hp -> {
-		hp.setTeam(Lambdas.assignTeam.get()); //calls Supplier
+		hp.setTeam(hp.assignTeam.get()); //calls Supplier
 		Goalie g = (Goalie)hp; //narrowing cast of HockeyPlayer object to a Goalie object
-		Float calcSP = Lambdas.savePer.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
-		Lambdas.setSavePer.accept(calcSP, g); //calls BiConsumer
+		Float calcSP = g.savePer.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
+		g.setSavePer.accept(calcSP, g); //calls BiConsumer
 		return g;
 	};
 	
@@ -39,6 +38,29 @@ public class StatsChart{
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", g.getTeam(), g.getLastName(), g.getJersey(), g.getShotsAgainst(), g.getSaves() , g.getSavePercent()));
 	};
 	
+	public void printSkaterStats(ArrayList<HockeyPlayer> team){
+		System.out.println("\n******* Goals Scored by and Shooting Percentages of WSH Forwards and Defense (since 2/26/2019) *******\n");
+		System.out.println("*not yet sorted\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Shooting %"));
+		System.out.println("---------------------------------------------------------------");
+		team.stream()
+		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
+		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
+		//.sorted(byGoalsThenName) //sort stream with a Comparator!
+		.forEach(sk -> printSKShootPercent.accept(sk)); //calls printSKShootPercent
+		System.out.println("\n****************************************************************");	
+	}
+	
+	public void printGoalieStats(ArrayList<HockeyPlayer> team){
+		System.out.println("\n***************** Save Percentages of WSH Goalies (since 2/26/2019) *****************\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Shots Against", "Saves", "Save %"));
+		System.out.println("-------------------------------------------------------------------------------");
+		team.stream()
+		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference
+		.forEach(gl -> printGSavePercent.accept(gl)); //calls printGSavePercent
+		System.out.println("\n**********************************************************************************");		
+	}
+	
 	//main method that prints (to console) the sorted stat chart of the current roster
 	public static void main(String... args){
 		Roster r = new Roster();
@@ -47,24 +69,7 @@ public class StatsChart{
 			team.add(r.getHockeyPlayer(i));
 		}
 		StatsChart st = new StatsChart();
-		
-		System.out.println("\n******* Goals Scored by and Save Percentages of WSH Forwards and Defense (since 2/26/2019) *******\n");
-		System.out.println("*not yet sorted\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Shooting %"));
-		System.out.println("---------------------------------------------------------------");
-		team.stream()
-		.filter(Lambdas.filterOutGoalies :: test) //calls Predicate w/a method reference
-		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
-		//.sorted(byGoalsThenName) //sort stream with a Comparator!
-		.forEach(sk -> st.printSKShootPercent.accept(sk)); //calls printSKShootPercent
-		System.out.println("\n****************************************************************");	
-		
-		System.out.println("\n***************** Save Percentages of WSH Goalies (since 2/26/2019) *****************\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Shots Against", "Saves", "Save %"));
-		System.out.println("-------------------------------------------------------------------------------");
-		team.stream()
-		.filter(Lambdas.keepGoalies :: test) //calls Predicate w/a method reference
-		.forEach(gl -> st.printGSavePercent.accept(gl)); //calls printGSavePercent
-		System.out.println("\n**********************************************************************************");		
+		st.printSkaterStats(team);
+		st.printGoalieStats(team);
 	}
 }
