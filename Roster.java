@@ -29,7 +29,7 @@ public class Roster{
 		try{
     			while (ld.getSc().hasNextLine()) {
     				HockeyPlayer hp = ld.setHP.get(); //create a HockeyPlayer object with last name, position and jersey information from the data file specified in the LoadData class
-    				if(Lambdas.filterOutGoalies.test(hp)){ //if HockeyPlayer is NOT a Goalie
+    				if(HockeyPlayer.filterOutGoalies.test(hp)){ //if HockeyPlayer is NOT a Goalie
     					roster.add(ld.setSkater.apply(hp)); //use the the setSkater Lambda provided in the LoadData class to initialize a Skater object (w/input file data) and add this Skater object to the roster
 				}
 				else{ //if HockeyPlayer is a Goalie
