@@ -10,6 +10,11 @@
 //getGoals(), getShots(), getShootingPercent() exist so that other classes may not have direct access
 //to private Skater class variables.
 
+//the utility Lambdas calculate and set skater's shooting percentage, respectively.
+//the utility method sorts skaters by goals scored; players with equal goals are sorted by last name.
+
+import java.util.function.*;
+
 public class Skater extends HockeyPlayer{
 	//fields
 	private int goals;
@@ -49,4 +54,36 @@ public class Skater extends HockeyPlayer{
 	public float getShootingPercent(){
 		return shootingPercent;	
 	}
+	
+	//utility Lambdas
+	//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
+	public BiFunction<Integer, Integer, Float> shootPer = (g, s) -> {
+		if(s == 0){
+			return (float)0;
+		}
+		return ((float)g / (float)s)*100;		
+	};
+	
+	//this accepts a shooting percentage and a skater, and sets that skater object's shooting percentage field
+	public static BiConsumer<Float, Skater> setShootPer = (sp, sk) -> {
+		sk.setShootingPercent(sp);	
+	};
+	
+	//utility methods
+	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
+	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
+	public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
+		try{
+			Skater s1 = (Skater)h1;
+			Skater s2 = (Skater)h2;
+			if(s2.getGoals() - s1.getGoals() != 0){
+				return s2.getGoals() - s1.getGoals();	
+			}
+			return s1.getLastName().compareTo(s2.getLastName());	
+		}
+		catch(ClassCastException cce){
+			System.out.println("Exception: " + cce);	
+		}
+		return 0;
+	}	
 }
