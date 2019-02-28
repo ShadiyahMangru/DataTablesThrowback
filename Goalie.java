@@ -10,6 +10,10 @@
 //getShotsAgainst(), getGoals(), getSavePercent() exist so that other classes may not have direct access
 //to private Goalie class variables.
 
+//the utility Lambdas calculate and set goalie's save percentage, respectively.
+
+import java.util.function.*;
+
 class Goalie extends HockeyPlayer{
 	//fields
 	private int shotsAgainst;
@@ -49,4 +53,18 @@ class Goalie extends HockeyPlayer{
 	public float getSavePercent(){
 		return savePercent;	
 	}
+	
+	//utility Lambdas
+	//this Lambda accepts a goalie's saves and shotsAg as parameters, and returns the goalie's save percentage
+	public BiFunction<Integer, Integer, Float> savePer = (s, sA) -> {
+		if(sA == 0){
+			return (float)0;
+		}
+		return ((float)s / (float)sA);		
+	};
+	
+	//this Lambda accepts a save percentage and a goalie, and sets that goalie object's save percentage field
+	public BiConsumer<Float, Goalie> setSavePer = (sp, g) -> {
+		g.setSavePercent(sp);	
+	};
 }
