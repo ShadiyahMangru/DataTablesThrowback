@@ -11,7 +11,9 @@
 //to private Goalie class variables.
 
 //the utility Lambdas calculate and set goalie's save percentage, respectively.
+//the utility method provides a static method to print a Goalie Stats data table
 
+import java.util.*;
 import java.util.function.*;
 
 class Goalie extends HockeyPlayer{
@@ -37,7 +39,7 @@ class Goalie extends HockeyPlayer{
 		this.saves = saves;	
 	}
 	
-	public void setSavePercent(float savePercent){
+	private void setSavePercent(float savePercent){
 		this.savePercent = savePercent;	
 	}
 	
@@ -67,4 +69,34 @@ class Goalie extends HockeyPlayer{
 	public BiConsumer<Float, Goalie> setSavePer = (sp, g) -> {
 		g.setSavePercent(sp);	
 	};
+	
+	//this Lambda sets team of HockeyPlayer object,
+	//casts HockeyPlayer object to Goalie object
+	//calculates and sets Goalie object's save percentage
+	//returns Goalie object
+	public static Function<HockeyPlayer, Goalie> GTeamAndSavePercent = hp -> {
+		hp.setTeam(hp.assignTeam.get()); //calls Supplier
+		Goalie g = (Goalie)hp; //narrowing cast of HockeyPlayer object to a Goalie object
+		Float calcSP = g.savePer.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
+		g.setSavePer.accept(calcSP, g); //calls BiConsumer
+		return g;
+	};
+	
+	public static Consumer<HockeyPlayer> printGSavePercent = hp -> {
+		Goalie g = GTeamAndSavePercent.apply(hp);
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", g.getTeam(), g.getLastName(), g.getJersey(), g.getShotsAgainst(), g.getSaves() , g.getSavePercent()));
+	};
+	
+	//utility method
+	//this method accepts an ArrayList<HockeyPlayer> team parameter, keeps only Goalies in input stream,
+	//then outputs to screen a Goalie Stats data table
+	public static void printGoalieStats(ArrayList<HockeyPlayer> team){
+		System.out.println("\n***************** Save Percentages of WSH Goalies (since 2/26/2019) *****************\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Shots Against", "Saves", "Save %"));
+		System.out.println("-------------------------------------------------------------------------------");
+		team.stream()
+		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference
+		.forEach(gl -> Goalie.printGSavePercent.accept(gl)); //calls printGSavePercent
+		System.out.println("\n**********************************************************************************");		
+	}
 }
