@@ -8,6 +8,13 @@
 //getLastName(), getPosition(), getJersey(), getTeam() exist so that other classes may not have direct
 //access to private HockeyPlayer class variables.
 
+//utility Lambdas exist to
+//filterOutGoalies / keepGoalies returns true if the HockeyPlayer is not / is a goalie.  The two Lambdas are static.
+//evenNumberPlayers returns true if the HockeyPlayer wears an even-numbered jersey
+//assignTeam returns the "WSH" String.
+
+import java.util.function.*;
+
 public class HockeyPlayer{
 	//fields
 	private String lastName;
@@ -53,4 +60,36 @@ public class HockeyPlayer{
 	public String getTeam(){
 		return team;	
 	}
+	
+	//utility Lambdas
+	//this Lambda accepts a HockeyPlayer parameter and returns true if the HockeyPlayer is not a Goalie
+	//a static Lambda b/c it does not require an instance of the HockeyPlayer class
+	public static Predicate<HockeyPlayer> filterOutGoalies = hp -> {
+		if(!hp.getPosition().equals("Goalie")){
+			return true;	
+		}
+		return false;	
+	};
+	
+	//this Lambda accepts a HockeyPlayer parameter and returns true if the HockeyPlayer is a Goalie
+	//a static Lambda b/c does not require an instance of the HockeyPlayer class
+	public static Predicate<HockeyPlayer> keepGoalies = hp -> {
+		if(hp.getPosition().equals("Goalie")){
+			return true;	
+		}
+		return false;	
+	};
+	
+	//this Lambda accepts a HockeyPlayer parameter and returns true if the HockeyPlayer wears an even-numbered jersey
+	public Predicate<HockeyPlayer> evenNumberPlayers = hp -> {
+		if(hp.getJersey() % 2 == 0){
+			return true;	
+		}
+		return false;	
+	};
+	
+	//this Lambda takes no parameters and returns the String "WSH".
+	public Supplier<String> assignTeam = () -> {
+		return "WSH";
+	};
 }
