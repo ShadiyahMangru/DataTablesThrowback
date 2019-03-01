@@ -1,3 +1,11 @@
+//the Roster class leverages a singleton design pattern.
+//the singleton design pattern facilitates creation of only one instance of the Roster object in memory
+//a singleton Roster centralizes the data
+//the singleton pattern is a creational pattern focused on creating only one instance of an object in memory
+//within an application, shareable by all classes and threads within the application.
+//Singletons may also improve performance by loading reusable data that would otherwise be 
+//time consuming to store and reload each time it is needed. 
+
 //the Roster class stores the file location of input data, and uses this information to 
 //initialize a Scanner object.
 //Lambdas provide means to:
@@ -9,8 +17,7 @@
 //The Roster class contains an ArrayList roster field.  This ArrayList accepts HockeyPlayer objects,
 //therefore one may also add Skater and Goalie objects -- direct descendants of HockeyPlayer-- to the roster ArrayList.
 
-//setRoster() initializes the roster ArrayList and creates an instance of the LoadData class.  
-//Helper Lambdas from the LoadData class faciliate players' data compilation in the roster ArrayList.
+//setRoster() initializes the roster ArrayList.  Helper Lambdas faciliate players' data compilation in the roster ArrayList.
 
 //Roster's getter methods PREVENT modification of or direct access to the mutable roster object.
 //No references to the roster object are publicly available; 
@@ -36,10 +43,20 @@ public class Roster{
 	
 	private ArrayList<HockeyPlayer> roster;
 	
-	//constructor
-	public Roster(){
+	//PRIVATE constructor
+	//all constructors in a singleton class are marked private, which ensures that no other class is capable
+	//of instantiating another version of the class
+	private Roster(){
 		setSc();
 		setRoster();
+	}
+	
+	//singletons in Java are created as private static variables within the class, often with the name instance
+	private static final Roster instance = new Roster();
+	
+	//singletons are accessed via a single public static method, often named getInstance(), which returns the reference to the singleton object
+	public static Roster getInstance(){
+		return instance;	
 	}
 	
 	//setters
