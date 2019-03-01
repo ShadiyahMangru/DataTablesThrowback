@@ -36,7 +36,7 @@ ________________________________________________________________________________
 - (i) The roster field in the Roster class uses **Generics** to accept HockeyPlayer objects, a more general type of the Skater objects and Goalie objects currently found in the roster ArrayList.  **Motivation for use:**  Using the superclass or interface type of roster ArrayList objects allows us to have one roster comprised of different player types.
 
 
-- (ii) The HockeyPlayer class and its direct descendants (Skater and Goalie) override the printHPSP lambda. 
+- (ii) The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
 ```
 public Consumer<HockeyPlayer> printHPSP = hp -> {
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s |", hp.getTeam(), hp.getLastName(), hp.getJersey(), hp.getPosition()));
