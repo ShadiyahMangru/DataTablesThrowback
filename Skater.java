@@ -62,7 +62,7 @@ public class Skater extends HockeyPlayer{
 	
 	//utility Lambdas
 	//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
-	public BiFunction<Integer, Integer, Float> shootPer = (g, s) -> {
+	public BiFunction<Integer, Integer, Float> sP = (g, s) -> {
 		if(s == 0){
 			return (float)0;
 		}
@@ -70,7 +70,7 @@ public class Skater extends HockeyPlayer{
 	};
 	
 	//this accepts a shooting percentage and a skater, and sets that skater object's shooting percentage field
-	public BiConsumer<Float, Skater> setShootPer = (sp, sk) -> {
+	public BiConsumer<Float, Skater> setSP = (sp, sk) -> {
 		sk.setShootingPercent(sp);	
 	};
 	
@@ -78,16 +78,16 @@ public class Skater extends HockeyPlayer{
 	//casts HockeyPlayer object to Skater object
 	//calculates and sets Skater object's shooting percentage
 	//returns Skater object
-	private static Function<HockeyPlayer, Skater> SKTeamAndShPercent = hp ->{
+	private Function<HockeyPlayer, Skater> HPTeamAndSP = hp ->{
 		hp.setTeam(hp.assignTeam.get()); //calls Supplier
 		Skater s = (Skater)hp; //narrowing cast of HockeyPlayer object to a Skater object
-		Float calcSP = s.shootPer.apply(s.getGoals(), s.getShots()); //calls BiFunction
-		s.setShootPer.accept(calcSP, s); //calls BiConsumer
+		Float calcSP = s.sP.apply(s.getGoals(), s.getShots()); //calls BiFunction
+		s.setSP.accept(calcSP, s); //calls BiConsumer
 		return s;
 	};
 	
-	public static Consumer<HockeyPlayer> printSKShootPercent = hp -> {
-		Skater s = SKTeamAndShPercent.apply(hp);
+	public Consumer<HockeyPlayer> printHPSP = hp -> {
+		Skater s = HPTeamAndSP.apply(hp);
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", s.getTeam(), s.getLastName(), s.getJersey(), s.getGoals() , s.getShootingPercent()));
 	};
 	
@@ -124,7 +124,7 @@ public class Skater extends HockeyPlayer{
 		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
 		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
 		.sorted(byGoalsThenName) //sort stream with a Comparator!
-		.forEach(sk -> printSKShootPercent.accept(sk)); //calls printSKShootPercent
+		.forEach(sk -> {Skater s = (Skater)sk; s.printHPSP.accept(s);}); //calls Skater classes' printHPSP
 		System.out.println("\n****************************************************************");	
 	}
 }
