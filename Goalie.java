@@ -58,7 +58,7 @@ class Goalie extends HockeyPlayer{
 	
 	//utility Lambdas
 	//this Lambda accepts a goalie's saves and shotsAg as parameters, and returns the goalie's save percentage
-	public BiFunction<Integer, Integer, Float> savePer = (s, sA) -> {
+	public BiFunction<Integer, Integer, Float> sP = (s, sA) -> {
 		if(sA == 0){
 			return (float)0;
 		}
@@ -66,7 +66,7 @@ class Goalie extends HockeyPlayer{
 	};
 	
 	//this Lambda accepts a save percentage and a goalie, and sets that goalie object's save percentage field
-	public BiConsumer<Float, Goalie> setSavePer = (sp, g) -> {
+	public BiConsumer<Float, Goalie> setSP = (sp, g) -> {
 		g.setSavePercent(sp);	
 	};
 	
@@ -74,16 +74,16 @@ class Goalie extends HockeyPlayer{
 	//casts HockeyPlayer object to Goalie object
 	//calculates and sets Goalie object's save percentage
 	//returns Goalie object
-	public static Function<HockeyPlayer, Goalie> GTeamAndSavePercent = hp -> {
+	public Function<HockeyPlayer, Goalie> HPTeamAndSP = hp -> {
 		hp.setTeam(hp.assignTeam.get()); //calls Supplier
 		Goalie g = (Goalie)hp; //narrowing cast of HockeyPlayer object to a Goalie object
-		Float calcSP = g.savePer.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
-		g.setSavePer.accept(calcSP, g); //calls BiConsumer
+		Float calcSP = g.sP.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
+		g.setSP.accept(calcSP, g); //calls BiConsumer
 		return g;
 	};
 	
-	public static Consumer<HockeyPlayer> printGSavePercent = hp -> {
-		Goalie g = GTeamAndSavePercent.apply(hp);
+	public Consumer<HockeyPlayer> printHPSP = hp -> {
+		Goalie g = HPTeamAndSP.apply(hp);
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", g.getTeam(), g.getLastName(), g.getJersey(), g.getShotsAgainst(), g.getSaves() , g.getSavePercent()));
 	};
 	
@@ -95,8 +95,8 @@ class Goalie extends HockeyPlayer{
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Shots Against", "Saves", "Save %"));
 		System.out.println("-------------------------------------------------------------------------------");
 		team.stream()
-		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference
-		.forEach(gl -> Goalie.printGSavePercent.accept(gl)); //calls printGSavePercent
+		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
+		.forEach(gl -> {Goalie g = (Goalie)gl; g.printHPSP.accept(gl);}); //calls Goalie class' printHPSP
 		System.out.println("\n**********************************************************************************");		
 	}
 }
