@@ -28,7 +28,7 @@ ________________________________________________________________________________
 ### This application leverages a compile-time safety strategy: (i) Generics
 
 - (i) The Roster class uses **Generics** in the roster field declaration:   `private ArrayList<HockeyPlayer> roster;`
-**Motivation for use:** Java SE 8 allows programmers to add *different types of objects* to an ArrayList.  Thanks to Generics, the benefits outweigh the pitfalls of this feature.  Specifically, this application’s code acts upon HockeyPlayer objects and their direct descendants (Skater objects and Goalie objects).  It is prudent to use Generics in the roster ArrayList declaration to ensure all roster elements be of (or a direct subclass of) type HockeyPlayer to avoid runtime errors.  Generics in object declaration alerts programmer to type mismatch(es) *at compile time* – provides compile-time type safety.  In other words, generics in object declaration prevents runtime mishaps.
+**Motivation for use:** Java SE 8 allows programmers to add *different types of objects* to an ArrayList.  Thanks to Generics, the benefits outweigh the pitfalls of this feature.  Specifically, this application’s code acts upon HockeyPlayer objects and their direct descendants (Skater objects and Goalie objects).  It is prudent to use Generics in the roster ArrayList declaration to ensure all roster elements be of (or be a direct subclass of) type HockeyPlayer to avoid runtime errors.  Generics in object declaration alerts programmer to type mismatch(es) *at compile time* – provides compile-time type safety.  In other words, generics in object declaration prevents runtime mishaps.
 
 ______________________________________________________________________________________________________________________________________
 ### This application leverages 3 *code-reusability and code-flexibility* strategies: (i) Generics, (ii) Method Overriding, (iii) Polymorphism
@@ -94,3 +94,30 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 
 When a Skater object calls the sP lambda, a shooting percentage is calculated.  When a Goalie object calls the sP lambda, a save percentage is calculated.  **Motivation for use:** through the Polymorphism achieved through class inheritance and methods/lambdas with the same name but different definitions depending on the class to which they belong, we may perform a single action – e.g., calculate – but go about this in a certain relevant way depending on context / object type.
 
+______________________________________________________________________________________________________________________________________
+### This application leverages a strategy to avoid program failure at the time the program is run: (i) Exception Handling
+
+- (i) The Roster class leverages **Exception Handling,** via a try-catch block, to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
+
+```
+//this lambda accepts a HockeyPlayer and, after reading-in goals and shots values, initializes and returns a new skater object 
+	public Function<HockeyPlayer, Skater> setSkater = hp ->{
+		try{ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
+			setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
+			Skater s = new Skater(hp, Integer.parseInt(goalsShotsArray[0]), Integer.parseInt(goalsShotsArray[1]));
+			return s;
+    		}
+    		catch(Exception e){
+    			System.out.println("Exception: " + e);	
+    			Skater s = new Skater(hp, -1, -1);
+    			return s;
+    		}
+	};
+```
+**Motivation for use:**  In a Java try statement, *the code stops running at the line that throws an exception and execution goes to the catch block* (which, in this case, uses the generalized *Exception e* should there be more mishaps in this try statement than those that can be caught by an ArrayIndexOutOfBoundsException).  
+
+Specifically, the programmer notices the potential for program failure at this line:
+`
+setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
+`
+Since this line *will* throw an exception if the input file does not contain a colon on the stats-input line of each player entry, in this event program flow will immediately transfer to the catch block.  A new Skater object will be initialized (and later returned) with inaccurate goals and shots values of -1, respectively, but the entire application will not fail due to the missing colon.
