@@ -95,9 +95,9 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 When a Skater object calls the sP lambda, a shooting percentage is calculated.  When a Goalie object calls the sP lambda, a save percentage is calculated.  **Motivation for use:** through the Polymorphism achieved through class inheritance and methods/lambdas with the same name but different definitions depending on the class to which they belong, we may perform a single action – e.g., calculate – but go about this in a certain relevant way depending on context / object type.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages a strategy to avoid program failure at the time the program is run: (i) Exception Handling
+### This application leverages strategies to avoid program failure at the time the program is run: (i) Exception Handling via a try-catch block, (ii) Exception Handling via an if-statement
 
-- (i) The Roster class leverages **Exception Handling,** via a try-catch block, to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
+- (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
 
 ```
 //this lambda accepts a HockeyPlayer and, after reading-in goals and shots values, initializes and returns a new skater object 
@@ -121,3 +121,17 @@ Specifically, the programmer notices the potential for program failure at this l
 setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
 `
 Since this line *will* throw an exception if the input file does not contain a colon on the stats-input line of each player entry, in this event program flow will immediately transfer to the catch block.  A new Skater object will be initialized (and later returned) with inaccurate goals and shots values of -1, respectively, but the entire application will not fail due to the missing colon.
+
+- (ii) The Bifunction Lambda sP in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.  
+
+```
+//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
+	public BiFunction<Integer, Integer, Float> sP = (g, s) -> {
+		if(s == 0){
+			return (float)0;
+		}
+		return ((float)g / (float)s)*100;		
+	};
+```
+
+**Motivation for use:** The JVM throws an ArithmeticException when code attempts to divide by zero.  The sP lambda, which accepts a Skater's current goals and shots values as parameters, divides goals by shots while calculating a Skater's shooting percentage.  Since it is possible that the Skater's shots value is zero, an initial if-statement 'short-circuits' the method before a problematic division-by-zero is attempted. 
