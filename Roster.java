@@ -147,16 +147,16 @@ public class Roster{
     		}
 	};
 	
-	//this lambda accepts a HockeyPlayer and, after reading-in saves and shotsAg values, initializes and returns a new goalie object 
+	//this lambda accepts a HockeyPlayer and, after reading-in saves, shotsAg, and wins values, initializes and returns a new goalie object 
 	public Function <HockeyPlayer, Goalie> setGoalie = hp -> {
 		try{ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
-			savesShotsAgArray = vals.get().split(":"); //saves at ssa[0] and shotsAgainst at ssa[1]
-			Goalie g = new Goalie(hp, Integer.parseInt(savesShotsAgArray[0]), Integer.parseInt(savesShotsAgArray[1]));
+			savesShotsAgArray = vals.get().split(":"); //saves at ssa[0], shotsAgainst at ssa[1], wins at ssa[2]
+			Goalie g = new Goalie(hp, Integer.parseInt(savesShotsAgArray[0]), Integer.parseInt(savesShotsAgArray[1]), Integer.parseInt(savesShotsAgArray[2]));
     			return g;
 		}
 		catch(Exception e){
 			System.out.println("Exception: " + e);	
-			Goalie g = new Goalie(hp, -1, -1);
+			Goalie g = new Goalie(hp, -1, -1, -1);
 			return g;
 		}
 	};
