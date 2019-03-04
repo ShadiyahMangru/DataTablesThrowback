@@ -5,10 +5,10 @@ ________________________________________________________________________________
 
 ### This application leverages 5 built-in *Functional Interfaces* (interfaces with a single abstract method): (i) Function, (ii) Consumer, (iii) Predicate, (iv) Supplier, (v) Comparator.
 
-- (i) The Skater class leverages the **BiFunction Functional Interface** to accept a Skater’s goals and shots values and, following some calculations, return this Skater’s shooting percentage.  **Motivation for use:** the Function/BiFunction Functional Interface turns one/two parameter(s) into a value of a potentially different type and returns this value.
+- (i) **(REVISE LATER)** The Skater class leverages the **BiFunction Functional Interface** to accept a Skater’s goals and shots values and, following some calculations, return this Skater’s shooting percentage.  **Motivation for use:** the Function/BiFunction Functional Interface turns one/two parameter(s) into a value of a potentially different type and returns this value.
 
 
-- (ii) The Skater class leverages the **BiConsumer Functional Interface** to accept a shooting percentage value and a Skater object, then set the Skater object’s shooting percentage field.  **Motivation for use:** Consumers accept/manipulate one/two parameter(s), but do not return anything.
+- (ii) **(REVISE LATER)** The Skater class leverages the **BiConsumer Functional Interface** to accept a shooting percentage value and a Skater object, then set the Skater object’s shooting percentage field.  **Motivation for use:** Consumers accept/manipulate one/two parameter(s), but do not return anything.
 
 
 - (iii) The HockeyPlayer class leverages the **Predicate Functional Interface** to determine if a HockeyPlayer object is a goalie.  The boolean value returned dictates whether a narrowing cast would be to a Skater object, or to a Goalie object.  **Motivation for use:** Predicates return a boolean value and may be used to test a condition (often used when filtering or matching).
@@ -81,7 +81,7 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 ```
 
 
-- (iii) The different definitions of the sP lambda in the Skater and Goalie classes demonstrate the principle of **Polymorphism** by facilitating a player stat calculation depending on context.    
+- (iii) **(REVISE LATER)** The different definitions of the sP lambda in the Skater and Goalie classes demonstrate the principle of **Polymorphism** by facilitating a player stat calculation depending on context.    
 
 ``` 
 //this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
@@ -108,7 +108,7 @@ When a Skater object calls the sP lambda, a shooting percentage is calculated.  
 ______________________________________________________________________________________________________________________________________
 ### This application leverages strategies to avoid program failure at the time the program is run: (i) Exception Handling via a try-catch block, (ii) Exception Handling via an if-statement
 
-- (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
+- (i) **(REVISE LATER)** The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
 
 ```
 //this lambda accepts a HockeyPlayer and, after reading-in goals and shots values, initializes and returns a new skater object 
@@ -133,7 +133,7 @@ setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
 `
 Since this line *will* throw an exception if the input file does not contain a colon on the stats-input line of each player entry, in this event program flow will immediately transfer to the catch block.  A new Skater object will be initialized (and later returned) with inaccurate goals and shots values of -1, respectively, but the entire application will not fail due to the missing colon.
 
-- (ii) The Bifunction Lambda sP in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.  
+- (ii) **(REVISE LATER)** The Bifunction Lambda sP in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.  
 
 ```
 //this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
