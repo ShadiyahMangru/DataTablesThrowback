@@ -1,52 +1,52 @@
 Ovechkin
 Left Wing
 8    
-44:255
+45:266
 *
 Holtby
 Goalie
 72
-1273:1402
+1315:1447:24
 *
 Backstrom
 Center
 19
-15:140
+15:143
 *
 Connolly
 Right Wing
 10
-16:105
+16:109
 *
 Carlson
 Defense
 74
-10:146
+10:148
 *
 Orlov
 Defense
 9
-3:78
+3:80
 *
 Boyd
 Center
 72
-4:26
+4:27
 *
 Burakovsky
 Left Wing
 65
-8:75
+9:78
 *
 Dowd
 Center
 26
-6:31
+6:34
 *
 Eller
 Center
 20
-8:123
+8:131
 *
 Jaskin
 Right Wing
@@ -56,12 +56,12 @@ Right Wing
 Kuznetsov
 Center
 92
-17:158
+17:160
 *
 Oshie
 Right Wing
 77
-20:111
+21:117
 *
 Stephenson
 Center
@@ -71,12 +71,12 @@ Center
 Vrana
 Left Wing
 13
-18:127
+19:131
 *
 Wilson
 Right Wing
 43
-18:97
+18:101
 *
 Djoos
 Defense
@@ -86,12 +86,12 @@ Defense
 Kempny
 Defense
 6
-6:96
+6:98
 *
 Niskanen
 Defense
 2
-8:101
+8:103
 *
 Orpik
 Defense
@@ -101,15 +101,15 @@ Defense
 Hagelin
 Left Wing
 62
-0:8
+1:13
 *
 Jensen
 Defense
 3
-0:4
+0:9
 *
 Copley
 Goalie
 1
-599:665
+599:665:14
 *
