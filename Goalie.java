@@ -4,13 +4,13 @@
 //parent HockeyPlayer class/object through inheritance of the getLastName(), getPosition(), getJersey(),
 //and getTeam() methods
 
-//the Goalie object also has saves, shots against, and save percentage values.
-//one must initialize the Goalie object with a HockeyPlayer object AND values for saves and shots against
+//the Goalie object also has saves, shots against, wins, and save percentage values.
+//one must initialize the Goalie object with a HockeyPlayer object AND values for saves, shots against, and wins
 //setters exist to...
-//getShotsAgainst(), getGoals(), getSavePercent() exist so that other classes may not have direct access
+//getSaves(), getShotsAgainst(), getWins(), and getSavePercent() exist so that other classes may not have direct access
 //to private Goalie class variables.
 
-//the utility Lambdas calculate and set goalie's save percentage, respectively.
+//the utility Lambdas exist to...
 //the utility method provides a static method to print a Goalie Stats data table
 
 import java.util.*;
@@ -18,8 +18,8 @@ import java.util.function.*;
 
 class Goalie extends HockeyPlayer{
 	//fields
-	private int shotsAgainst;
 	private int saves;
+	private int shotsAgainst;
 	private int wins;
 	private float savePercent;
 	
@@ -29,7 +29,7 @@ class Goalie extends HockeyPlayer{
 		this.saves = saves;
 		this.shotsAgainst = shotsAgainst;
 		this.wins = wins;
-		this.savePercent = (float)0;
+		setSavePercent(saves, shotsAgainst);
 	}
 	
 	//setters
@@ -45,8 +45,11 @@ class Goalie extends HockeyPlayer{
 		this.wins = wins;	
 	}
 	
-	private void setSavePercent(float savePercent){
-		this.savePercent = savePercent;	
+	private void setSavePercent(int saves, int shotsAgainst){
+		if(shotsAgainst == 0){
+			savePercent = (float)0;
+		}
+		savePercent = ((float)saves / (float)shotsAgainst);			
 	}
 	
 	//getters
@@ -72,18 +75,6 @@ class Goalie extends HockeyPlayer{
 	}
 	
 	//utility Lambdas
-	//this Lambda accepts a goalie's saves and shotsAg as parameters, and returns the goalie's save percentage
-	public BiFunction<Integer, Integer, Float> sP = (s, sA) -> {
-		if(sA == 0){
-			return (float)0;
-		}
-		return ((float)s / (float)sA);		
-	};
-	
-	//this Lambda accepts a save percentage and a goalie, and sets that goalie object's save percentage field
-	public BiConsumer<Float, Goalie> setSP = (sp, g) -> {
-		g.setSavePercent(sp);	
-	};
 	
 	//this Lambda sets team of HockeyPlayer object,
 	//casts HockeyPlayer object to Goalie object
@@ -92,8 +83,6 @@ class Goalie extends HockeyPlayer{
 	public Function<HockeyPlayer, Goalie> HPTeamAndSP = hp -> {
 		hp.setTeam(hp.assignTeam.get()); //calls Supplier
 		Goalie g = (Goalie)hp; //narrowing cast of HockeyPlayer object to a Goalie object
-		Float calcSP = g.sP.apply(g.getSaves(), g.getShotsAgainst()); //calls BiFunction
-		g.setSP.accept(calcSP, g); //calls BiConsumer
 		return g;
 	};
 	
