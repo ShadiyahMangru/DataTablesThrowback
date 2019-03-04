@@ -20,23 +20,29 @@ class Goalie extends HockeyPlayer{
 	//fields
 	private int shotsAgainst;
 	private int saves;
+	private int wins;
 	private float savePercent;
 	
 	//constructor
-	public Goalie(HockeyPlayer hp, int saves, int shotsAgainst){
+	public Goalie(HockeyPlayer hp, int saves, int shotsAgainst, int wins){
 		super(hp.getLastName(), hp.getPosition(), hp.getJersey(), hp.getTeam());
 		this.saves = saves;
 		this.shotsAgainst = shotsAgainst;
+		this.wins = wins;
 		this.savePercent = (float)0;
 	}
 	
 	//setters
+	public void setSaves(int saves){
+		this.saves = saves;	
+	}
+	
 	public void setShotsAgainst(int shotsAgainst){
 		this.shotsAgainst = shotsAgainst;	
 	}
 	
-	public void setSaves(int saves){
-		this.saves = saves;	
+	public void setWins(int wins){
+		this.wins = wins;	
 	}
 	
 	private void setSavePercent(float savePercent){
@@ -44,16 +50,25 @@ class Goalie extends HockeyPlayer{
 	}
 	
 	//getters
-	public int getShotsAgainst(){
-		return shotsAgainst;	
-	}
-	
 	public int getSaves(){
 		return saves;	
 	}
 	
+	public int getShotsAgainst(){
+		return shotsAgainst;	
+	}
+	
+	public int getWins(){
+		return wins;	
+	}
+	
 	public float getSavePercent(){
 		return savePercent;	
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), wins, shotsAgainst, saves, savePercent);	
 	}
 	
 	//utility Lambdas
@@ -84,19 +99,19 @@ class Goalie extends HockeyPlayer{
 	
 	public Consumer<HockeyPlayer> printHPSP = hp -> {
 		Goalie g = HPTeamAndSP.apply(hp);
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", g.getTeam(), g.getLastName(), g.getJersey(), g.getShotsAgainst(), g.getSaves() , g.getSavePercent()));
+		System.out.println(g);
 	};
 	
 	//utility method
 	//this method accepts an ArrayList<HockeyPlayer> team parameter, keeps only Goalies in input stream,
 	//then outputs to screen a Goalie Stats data table
 	public static void printGoalieStats(ArrayList<HockeyPlayer> team){
-		System.out.println("\n***************** Save Percentages of WSH Goalies (since 2/26/2019) *****************\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Shots Against", "Saves", "Save %"));
-		System.out.println("-------------------------------------------------------------------------------");
+		System.out.println("\n***************** Save Percentages of WSH Goalies (since 3/3/2019) *****************\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Wins", "Shots Against", "Saves", "Save %"));
+		System.out.println("---------------------------------------------------------------------------------------");
 		team.stream()
 		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
 		.forEach(gl -> {Goalie g = (Goalie)gl; g.printHPSP.accept(gl);}); //calls Goalie class' printHPSP
-		System.out.println("\n**********************************************************************************");		
+		System.out.println("\n******************************************************************************************");		
 	}
 }
