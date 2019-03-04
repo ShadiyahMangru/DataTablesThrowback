@@ -25,10 +25,21 @@ ________________________________________________________________________________
 - (i) The Roster class applies a **Singleton Design Pattern**, which centralizes the roster data.  The singleton pattern is a creational pattern focused on creating only one instance of the Roster object in memory within the application, sharable by all classes and threads within the application.  All constructors in a singleton class are marked private, which ensures no other class is capable of instantiating another version of the Roster.  **Motivation for use:** Singletons are used in situations where we need access to a single set of data throughout an application.  Singletons may also improve performance by loading reusable data that would otherwise be time consuming to store and reload each time it is needed.  Singletons may also be used to coordinate access to shared resources, such as coordinating write access to a file.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages a compile-time safety strategy: (i) Generics
+### This application leverages compile-time safety strategies: (i) Generics, (ii) @Override annotation
 
 - (i) The Roster class uses **Generics** in the roster field declaration:   `private ArrayList<HockeyPlayer> roster;`
-**Motivation for use:** Java SE 8 allows programmers to add *different types of objects* to an ArrayList.  Thanks to Generics, the benefits outweigh the pitfalls of this feature.  Specifically, this application’s code acts upon HockeyPlayer objects and their direct descendants (Skater objects and Goalie objects).  It is prudent to use Generics in the roster ArrayList declaration to ensure all roster elements be of (or be a direct subclass of) type HockeyPlayer to avoid runtime errors.  Generics in object declaration alerts programmer to type mismatch(es) *at compile time* – provides compile-time type safety.  In other words, generics in object declaration prevents runtime mishaps.
+**Motivation for use:** Java SE 8 allows programmers to add *different types of objects* to an ArrayList.  Thanks to Generics, the benefits outweigh the pitfalls of this feature.  Specifically, this application’s code acts upon HockeyPlayer objects and their direct descendants (Skater objects and Goalie objects).  It is prudent to use Generics in the roster ArrayList declaration to ensure all roster elements be of (or be a direct subclass of) type HockeyPlayer to avoid runtime errors.  Generics in an object declaration alerts a programmer to type mismatch(es) *at compile time* – provides compile-time type safety.  In other words, generics in object declaration prevents runtime mishaps.
+
+- (ii) The Skater class uses an **annotated override of the toString() method** to facilitate compile-time-safe output that adheres to the data table format. 
+
+```
+@Override
+public String toString(){
+	return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, shootingPercent);
+}
+```
+
+**Motivation for use:** The @Override annotation signals to the compiler that the programmer intends for the annotated method to override a superclass method or implement an interface method.  If the contract for method overriding is not fulfilled, a compiler error prevents the application from running.  Since Java automatically calls toString() when printing out an object, ensuring that the toString() override was successful guarantees that any call to print a Skater object in this application will produce output that is compatible with the data table format.
 
 ______________________________________________________________________________________________________________________________________
 ### This application leverages 3 *code-reusability and code-flexibility* strategies: (i) Generics, (ii) Method Overriding, (iii) Polymorphism
@@ -36,7 +47,7 @@ ________________________________________________________________________________
 - (i) The roster field in the Roster class uses **Generics** to accept HockeyPlayer objects, a more general type of the Skater objects and Goalie objects currently found in the roster ArrayList.  **Motivation for use:**  Using the superclass or interface type of roster ArrayList objects allows us to have one roster comprised of different player types.
 
 
-- (ii) The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
+- (ii) **(REVISE THIS LATER)** The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
 ```
 public Consumer<HockeyPlayer> printHPSP = hp -> {
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s |", hp.getTeam(), hp.getLastName(), hp.getJersey(), hp.getPosition()));
