@@ -61,6 +61,11 @@ public class HockeyPlayer{
 		return team;	
 	}
 	
+	@Override
+	public String toString(){
+		return String.format("| %-4s | %-15s | %-4s | %-7s |", team, lastName, jersey, position);
+	}
+	
 	//utility Lambdas
 	//this Lambda accepts a HockeyPlayer parameter and returns true if the HockeyPlayer is not a Goalie
 	//a static Lambda b/c it does not require an instance of the HockeyPlayer class
@@ -91,9 +96,5 @@ public class HockeyPlayer{
 	//this Lambda takes no parameters and returns the String "WSH".
 	public Supplier<String> assignTeam = () -> {
 		return "WSH";
-	};
-	
-	public Consumer<HockeyPlayer> printHPSP = hp -> {
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s |", hp.getTeam(), hp.getLastName(), hp.getJersey(), hp.getPosition()));
 	};
 }
