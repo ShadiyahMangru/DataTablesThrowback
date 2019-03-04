@@ -60,6 +60,11 @@ public class Skater extends HockeyPlayer{
 		return shootingPercent;	
 	}
 	
+	@Override
+	public String toString(){
+		return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, shootingPercent);
+	}
+	
 	//utility Lambdas
 	//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
 	public BiFunction<Integer, Integer, Float> sP = (g, s) -> {
@@ -88,7 +93,7 @@ public class Skater extends HockeyPlayer{
 	
 	public Consumer<HockeyPlayer> printHPSP = hp -> {
 		Skater s = HPTeamAndSP.apply(hp);
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", s.getTeam(), s.getLastName(), s.getJersey(), s.getGoals() , s.getShootingPercent()));
+		System.out.println(s);
 	};
 	
 	//utility method
@@ -117,7 +122,7 @@ public class Skater extends HockeyPlayer{
 	//this method accepts an ArrayList<HockeyPlayer> team parameter, removes Goalies from input stream, sorts stream by goals then name,
 	//then outputs to screen a Skater Stats data table
 	public static void printSkaterStats(ArrayList<HockeyPlayer> team){
-		System.out.println("\n******* Goals Scored by and Shooting Percentages of WSH Forwards and Defense (since 2/26/2019) *******\n");
+		System.out.println("\n******* Goals Scored by and Shooting Percentages of WSH Forwards and Defense (since 3/3/2019) *******\n");
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Shooting %"));
 		System.out.println("---------------------------------------------------------------");
 		team.stream()
