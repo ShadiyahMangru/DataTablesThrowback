@@ -47,66 +47,21 @@ public static Roster getInstance(){
 **Motivation for use:** The Singleton Design Pattern enables creation of only one instance of the Roster object in memory within the application.  This single instance is shared among all classes (and threads) within the application.  Since all constructors in a singleton class are marked private, no other class can instantiate another version of the Roster.  Singletons may improve application performance by loading reusable data that would otherwise be time consuming to store and reload each time needed.  Coordination of access to shared resources, such as coordinating write access to a file, may also be achieved through Singletons.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages 2 *code-reusability and code-flexibility* strategies: (i) Method Overriding, (ii) Polymorphism
-
-- (i) **(REVISE THIS LATER)** The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
+### This application leverages a code-flexibility strategy: (i) Polymorphism
+- (i) The different definitions of toString() in the HockeyPlayer, Skater, and Goalie classes demonstrate the principle of **Polymorphism** by printing stats output that is formatted depending on object type.  **Motivation for use:** The HockeyPlayer class, the Skater class, and the Goalie class each provide overrides of the toString() method originally defined in the Object class (from which all classes in Java inherit).  In this application, Skater (pictured in 1st code block below) and Goalie (pictured in 2nd code block below) stats are output in data table format.  
 ```
 public Consumer<HockeyPlayer> printHPSP = hp -> {
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s |", hp.getTeam(), hp.getLastName(), hp.getJersey(), hp.getPosition()));
-	};
+	Skater s = HPTeamAndSP.apply(hp);
+	System.out.println(s);
+};
 ```
-
 ```
 public Consumer<HockeyPlayer> printHPSP = hp -> {
-		Skater s = HPTeamAndSP.apply(hp);
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", s.getTeam(), s.getLastName(), s.getJersey(), s.getGoals() , s.getShootingPercent()));
-	};
+	Goalie g = HPTeamAndSP.apply(hp);
+	System.out.println(g);
+};
 ```
- 
-``` 
-public Consumer<HockeyPlayer> printHPSP = hp -> {
-		Goalie g = HPTeamAndSP.apply(hp);
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-15s | %-7s | %-15s |", g.getTeam(), g.getLastName(), g.getJersey(), g.getShotsAgainst(), g.getSaves() , g.getSavePercent()));
-	};
-```
-
-Through **Method Overriding,** output is formatted based on the class/object calling the method/lambda.  **Motivation for use:** A Java object may be accessed using (i) a reference with the same type as the object, (ii) a reference that is a superclass of the object, or (iii) a reference that defines an interface the object implements, either directly or through a superclass.  The type of the object determines which properties exist within the object in memory.  The type of the reference to the object determines which methods and variables are accessible to the Java program.  
-
-The Skater class calls the printHPSP lambda defined in the Skater class.  
-```
-.forEach(sk -> {Skater s = (Skater)sk; s.printHPSP.accept(s);}); //calls Skater classes' printHPSP
-```
-
-The Goalie class calls the printHPSP lambda defined in the Goalie class.
-```
-.forEach(gl -> {Goalie g = (Goalie)gl; g.printHPSP.accept(gl);}); //calls Goalie class' printHPSP
-```
-
-
-- (ii) **(REVISE LATER)** The different definitions of the sP lambda in the Skater and Goalie classes demonstrate the principle of **Polymorphism** by facilitating a player stat calculation depending on context.    
-
-``` 
-//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
-	public BiFunction<Integer, Integer, Float> sP = (g, s) -> {
-		if(s == 0){
-			return (float)0;
-		}
-		return ((float)g / (float)s)*100;		
-	};
-  ```
-
-```
-//this Lambda accepts a goalie's saves and shotsAg as parameters, and returns the goalie's save percentage
-	public BiFunction<Integer, Integer, Float> sP = (s, sA) -> {
-		if(sA == 0){
-			return (float)0;
-		}
-		return ((float)s / (float)sA);		
-	};
-```
-
-When a Skater object calls the sP lambda, a shooting percentage is calculated.  When a Goalie object calls the sP lambda, a save percentage is calculated.  **Motivation for use:** through the Polymorphism achieved through class inheritance and methods/lambdas with the same name but different definitions depending on the class to which they belong, we may perform a single action – e.g., calculate – but go about this in a certain relevant way depending on context / object type.
-
+When the System.out.println() parameter is a Goalie object, the Goalie class toString() method is called.  Similarly, when the System.out.println() parameter is a Skater object, the Skater class toString() method is called.  Through the Polymorphism achieved by class inheritance and method overriding, we may perform a single action – e.g., output an object in String format – but accomplish this in a context-relevant way.
 ______________________________________________________________________________________________________________________________________
 ### This application leverages 4 strategies to avoid program failure at the time the program is run: (i) Exception Handling via try-catch, (ii) Exception Handling via if-statements, (iii) Generics, (iv) @Override annotation
 - (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should any expected colons not exist in the stats-input line of each player entry of the input file.
