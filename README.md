@@ -128,32 +128,35 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 When a Skater object calls the sP lambda, a shooting percentage is calculated.  When a Goalie object calls the sP lambda, a save percentage is calculated.  **Motivation for use:** through the Polymorphism achieved through class inheritance and methods/lambdas with the same name but different definitions depending on the class to which they belong, we may perform a single action – e.g., calculate – but go about this in a certain relevant way depending on context / object type.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages strategies to avoid program failure at the time the program is run: (i) Exception Handling via a try-catch block, (ii) Exception Handling via an if-statement
-
-- (i) **(REVISE LATER)** The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should the expected colon not exist in the stats-input line of each player entry of the input file.  
+### This application leverages strategies to avoid program failure at the time the program is run: (i) Exception Handling via try-catch, (ii) Exception Handling via if-statements
+- (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should any expected colons not exist in the stats-input line of each player entry of the input file.
 
 ```
-//this lambda accepts a HockeyPlayer and, after reading-in goals and shots values, initializes and returns a new skater object 
-	public Function<HockeyPlayer, Skater> setSkater = hp ->{
-		try{ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
-			setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
-			Skater s = new Skater(hp, Integer.parseInt(goalsShotsArray[0]), Integer.parseInt(goalsShotsArray[1]));
-			return s;
-    		}
-    		catch(Exception e){
-    			System.out.println("Exception: " + e);	
-    			Skater s = new Skater(hp, -1, -1);
-    			return s;
-    		}
-	};
+/**
+* This lambda accepts a HockeyPlayer object and, after reading-in goals, assists, 
+* and shots values, initializes and returns a new Skater object. 
+* @param HockeyPlayer object
+* @return Skater object
+*/
+public Function<HockeyPlayer, Skater> setSkater = hp ->{
+	try{ 
+		String[] skaterStats = vals.get().split(":"); //goals at sS[0], assists at sS[1], and shots at sS[2]
+		Skater s = new Skater(hp, Integer.parseInt(skaterStats[0]), Integer.parseInt(skaterStats[1]), Integer.parseInt(skaterStats[2]));
+		return s;
+	}
+    	catch(ArrayIndexOutOfBoundsException aiobe){ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
+    		System.out.println("Exception: " + aiobe);	
+    		Skater s = new Skater(hp, -1, -1, -1);
+    		return s;
+    	}
+};
 ```
-**Motivation for use:**  In a Java try statement, *the code stops running at the line that throws an exception and execution goes to the catch block* (which, in this case, uses the generalized *Exception e* should there be more mishaps in this try statement than those that can be caught by an ArrayIndexOutOfBoundsException).  
 
-Specifically, the programmer notices the potential for program failure at this line:
-`
-setGoalsShotsArray(vals.get().split(":")); //goals at gs[0] and shots at gs[1]
-`
-Since this line *will* throw an exception if the input file does not contain a colon on the stats-input line of each player entry, in this event program flow will immediately transfer to the catch block.  A new Skater object will be initialized (and later returned) with inaccurate goals and shots values of -1, respectively, but the entire application will not fail due to the missing colon.
+**Motivation for use:**  In a Java try statement, the code stops running at the line that throws an exception and execution immediately diverts to the catch block.  Specifically, there is potential for program failure at this line: 
+```
+String[] skaterStats = vals.get().split(":"); //goals at sS[0], assists at sS[1], and shots at sS[2]
+```
+This line *will* throw an exception if any of the expected colon-stats-separators do not exist on the stats-input line of each player entry of the input file.  In this event, program flow will immediately transfer to the catch block designed to handle an ArrayIndexOutOfBoundsException.  A new Skater object will still be initialized.  The returned new Skater object will contain inaccurate goals, assists, and shots values of -1, respectively, but the entire application will NOT fail due to one or more missing colon(s) in the input file.
 
 - (ii) **(REVISE LATER)** The Bifunction Lambda sP in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.  
 
