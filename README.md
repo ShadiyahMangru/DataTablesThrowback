@@ -20,9 +20,31 @@ ________________________________________________________________________________
 - (v) The Skater class leverages the **Comparator Functional Interface** to sort Skater objects in descending order by goals scored; when players tie for goals, they are sorted in ascending order by last name.  **Motivation for use:** Comparator is used to specify that (i) you want to use a different order than the object itself provides, (ii) you want to sort an object that did not implement Comparable, or (iii) you want to sort objects in different ways at different times.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages 1 *Design Pattern* (an established general solution to a commonly occurring software development problem): (i) Singleton.
+### This application leverages a performance-optimizing strategy: (i) Singleton Design Pattern
+- (i) The Roster class applies a **Singleton Design Pattern** to effectively/optimally manage access to a single set of data throughout an application.  
 
-- (i) The Roster class applies a **Singleton Design Pattern**, which centralizes the roster data.  The singleton pattern is a creational pattern focused on creating only one instance of the Roster object in memory within the application, sharable by all classes and threads within the application.  All constructors in a singleton class are marked private, which ensures no other class is capable of instantiating another version of the Roster.  **Motivation for use:** Singletons are used in situations where we need access to a single set of data throughout an application.  Singletons may also improve performance by loading reusable data that would otherwise be time consuming to store and reload each time it is needed.  Singletons may also be used to coordinate access to shared resources, such as coordinating write access to a file.
+```
+//PRIVATE constructor
+//all constructors in a singleton class are marked private, which ensures that no other class is capable
+//of instantiating another version of the class
+private Roster(){
+	setSc();
+	setRoster();
+}
+	
+//singletons in Java are created as private static variables within the class, often with the name instance
+private static final Roster instance = new Roster();
+	
+/**
+* This method, which is part of the Singleton Design Pattern, returns a reference to the Roster instance.
+* @return Roster
+*/
+//singletons are accessed via a single public static method, often named getInstance(), which returns the reference to the singleton object
+public static Roster getInstance(){
+	return instance;	
+}
+```
+**Motivation for use:** The Singleton Design Pattern enables creation of only one instance of the Roster object in memory within the application.  This single instance is shared among all classes (and threads) within the application.  Since all constructors in a singleton class are marked private, no other class can instantiate another version of the Roster.  Singletons may improve application performance by loading reusable data that would otherwise be time consuming to store and reload each time needed.  Coordination of access to shared resources, such as coordinating write access to a file, may also be achieved through Singletons.
 
 ______________________________________________________________________________________________________________________________________
 ### This application leverages compile-time safety strategies: (i) Generics, (ii) @Override annotation
