@@ -1,25 +1,80 @@
 # DataTablesThrowback
 ## This application generates Tabular Team Data via Java SE 8 Concepts.
 
-______________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+### This application leverages 5 built-in Functional Interfaces (interfaces with a single abstract method) to streamline code production: (i) Function, (ii) Consumer, (iii) Predicate, (iv) Supplier, (v) Comparator.
+- (i) The Skater class leverages the **Function Functional Interface** to accept a HockeyPlayer object, set its team field, and cast it to a Skater object that it then returns.  
+```
+//this Lambda sets team of HockeyPlayer object,
+//casts HockeyPlayer object to Skater object
+//returns Skater object
+private Function<HockeyPlayer, Skater> HPTeamAndSP = hp ->{
+	hp.setTeam(hp.assignTeam.get()); //calls Supplier
+	Skater s = (Skater)hp; //narrowing cast of HockeyPlayer object to a Skater object
+	return s;
+};
+```
+**Motivation for use:** Functions turn one parameter into a value of a potentially different type and return this value.
 
-### This application leverages 5 built-in *Functional Interfaces* (interfaces with a single abstract method): (i) Function, (ii) Consumer, (iii) Predicate, (iv) Supplier, (v) Comparator.
-
-- (i) **(REVISE LATER)** The Skater class leverages the **BiFunction Functional Interface** to accept a Skater’s goals and shots values and, following some calculations, return this Skater’s shooting percentage.  **Motivation for use:** the Function/BiFunction Functional Interface turns one/two parameter(s) into a value of a potentially different type and returns this value.
-
-
-- (ii) **(REVISE LATER)** The Skater class leverages the **BiConsumer Functional Interface** to accept a shooting percentage value and a Skater object, then set the Skater object’s shooting percentage field.  **Motivation for use:** Consumers accept/manipulate one/two parameter(s), but do not return anything.
-
-
-- (iii) The HockeyPlayer class leverages the **Predicate Functional Interface** to determine if a HockeyPlayer object is a goalie.  The boolean value returned dictates whether a narrowing cast would be to a Skater object, or to a Goalie object.  **Motivation for use:** Predicates return a boolean value and may be used to test a condition (often used when filtering or matching).
-
-
-- (iv) The HockeyPlayer class leverages the **Supplier Functional Interface** to provide a value – “WSH” – that may be used to set the team field of the HockeyPlayer object.  **Motivation for use:** the Supplier Functional Interface may be used to generate or supply values without taking any input.
-
-
-- (v) The Skater class leverages the **Comparator Functional Interface** to sort Skater objects in descending order by goals scored; when players tie for goals, they are sorted in ascending order by last name.  **Motivation for use:** Comparator is used to specify that (i) you want to use a different order than the object itself provides, (ii) you want to sort an object that did not implement Comparable, or (iii) you want to sort objects in different ways at different times.
-
-______________________________________________________________________________________________________________________________________
+- (ii) The Skater class leverages the **Consumer Functional Interface** to accept a HockeyPlayer object, set its team field, cast it to a Skater object, and print this Skater object to the console in the format defined by toString() of the Skater class.  
+```
+public Consumer<HockeyPlayer> printHPSP = hp -> {
+	Skater s = HPTeamAndSP.apply(hp);
+	System.out.println(s);
+};
+```
+**Motivation for use:** Consumers accept/manipulate one parameter, but return nothing.
+- (iii) The HockeyPlayer class leverages the **Predicate Functional Interface** to determine if a HockeyPlayer object is a goalie. The boolean value returned dictates whether a narrowing cast would be to a Skater object, or to a Goalie object.
+```
+/**
+* This Lambda accepts a HockeyPlayer parameter and returns true if this HockeyPlayer is NOT a Goalie.
+* This lambda is static and therefore may be called without being tethered to a specific instance of the HockeyPlayer class.
+* @return T/F response to 'this HockeyPlayer object is NOT a goalie' (in the form of a boolean)
+*/
+public static Predicate<HockeyPlayer> filterOutGoalies = hp -> {
+	if(!hp.getPosition().equals("Goalie")){
+		return true;	
+	}
+	return false;	
+};
+```
+**Motivation for use:** Predicates return a boolean value and may be used to test a condition (often used when filtering or matching).
+- (iv) The HockeyPlayer class leverages the **Supplier Functional Interface** to provide a value – “WSH” – that may be used to set the team field of the HockeyPlayer object. 
+```
+/**
+* This lambda takes no parameters and returns the String "WSH".
+* @return the team WSH (in the form of a String)
+*/
+public Supplier<String> assignTeam = () -> {
+	return "WSH";
+};
+```
+**Motivation for use:** Suppliers may be used to generate or supply values without taking any input.
+- (v) The Skater class leverages the **Comparator Functional Interface** to sort Skater objects in descending order by goals scored; when players tie for goals, they are sorted in ascending order by last name. 
+```
+//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
+//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
+public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
+	try{
+		Skater s1 = (Skater)h1;
+		Skater s2 = (Skater)h2;
+		if(s2.getGoals() - s1.getGoals() != 0){
+			return s2.getGoals() - s1.getGoals();	
+		}
+		return s1.getLastName().compareTo(s2.getLastName());	
+	}
+	catch(ClassCastException cce){
+		System.out.println("Exception: " + cce);	
+	}
+	return 0;
+}	
+```
+```
+//Comparator that sorts HockeyPlayers (who are Not Goalies) by goals then lastname, written with a Java SE 8 method reference
+static Comparator<HockeyPlayer> byGoalsThenName = Skater :: compareByGoalsThenName;
+```
+**Motivation for use:** Comparator is used to specify that (i) you want to use a different order than the object itself provides, (ii) you want to sort an object that did not implement Comparable, or (iii) you want to sort objects in different ways at different times.
+________________________________________________________________________________________________________________________________________
 ### This application leverages a performance-optimizing strategy: (i) Singleton Design Pattern
 - (i) The Roster class applies a **Singleton Design Pattern** to effectively/optimally manage access to a single set of data throughout an application.  
 
@@ -46,7 +101,7 @@ public static Roster getInstance(){
 ```
 **Motivation for use:** The Singleton Design Pattern enables creation of only one instance of the Roster object in memory within the application.  This single instance is shared among all classes (and threads) within the application.  Since all constructors in a singleton class are marked private, no other class can instantiate another version of the Roster.  Singletons may improve application performance by loading reusable data that would otherwise be time consuming to store and reload each time needed.  Coordination of access to shared resources, such as coordinating write access to a file, may also be achieved through Singletons.
 
-______________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
 ### This application leverages a code-flexibility strategy: (i) Polymorphism
 - (i) The different definitions of toString() in the HockeyPlayer, Skater, and Goalie classes demonstrate the principle of **Polymorphism** by printing stats output that is formatted depending on object type.  **Motivation for use:** The HockeyPlayer class, the Skater class, and the Goalie class each provide overrides of the toString() method originally defined in the Object class (from which all classes in Java inherit).  In this application, Skater (pictured in 1st code block below) and Goalie (pictured in 2nd code block below) stats are output in data table format.  
 ```
@@ -62,7 +117,7 @@ public Consumer<HockeyPlayer> printHPSP = hp -> {
 };
 ```
 When the System.out.println() parameter is a Goalie object, the Goalie class toString() method is called.  Similarly, when the System.out.println() parameter is a Skater object, the Skater class toString() method is called.  Through the Polymorphism achieved by class inheritance and method overriding, we may perform a single action – e.g., output an object in String format – but accomplish this in a context-relevant way.
-______________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
 ### This application leverages 4 strategies to avoid program failure at the time the program is run: (i) Exception Handling via try-catch, (ii) Exception Handling via if-statements, (iii) Generics, (iv) @Override annotation
 - (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should any expected colons not exist in the stats-input line of each player entry of the input file.
 
