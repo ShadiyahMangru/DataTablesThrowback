@@ -158,16 +158,13 @@ String[] skaterStats = vals.get().split(":"); //goals at sS[0], assists at sS[1]
 ```
 This line *will* throw an exception if any of the expected colon-stats-separators do not exist on the stats-input line of each player entry of the input file.  In this event, program flow will immediately transfer to the catch block designed to handle an ArrayIndexOutOfBoundsException.  A new Skater object will still be initialized.  The returned new Skater object will contain inaccurate goals, assists, and shots values of -1, respectively, but the entire application will NOT fail due to one or more missing colon(s) in the input file.
 
-- (ii) **(REVISE LATER)** The Bifunction Lambda sP in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.  
-
+- (ii) The ```setShootingPercent(int goals, int shots)``` in the Skater class uses an **if-statement implicit exception handling strategy** to avoid an ArithmeticException at the time the program is run.
 ```
-//this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
-	public BiFunction<Integer, Integer, Float> sP = (g, s) -> {
-		if(s == 0){
-			return (float)0;
-		}
-		return ((float)g / (float)s)*100;		
-	};
-```
-
-**Motivation for use:** The JVM throws an ArithmeticException when code attempts to divide by zero.  The sP lambda, which accepts a Skater's current goals and shots values as parameters, divides goals by shots while calculating a Skater's shooting percentage.  Since it is possible that the Skater's shots value is zero, an initial if-statement 'short-circuits' the method before a problematic division-by-zero is attempted. 
+public void setShootingPercent(int goals, int shots){
+	if(shots == 0){
+		shootingPercent = (float)0;
+	}
+	shootingPercent = ((float)goals / (float)shots)*100;	
+}
+``` 
+**Motivation for use:** The JVM throws an ArithmeticException when code attempts to divide by zero.  At the time the application is run, a Skater object’s shooting percent value is calculated after the application accepts roster data from the input file.  This setter method accepts a Skater's current goals and shots values as parameters – values not known until the application is run – then divides goals by shots to calculate an individual Skater's shooting percentage.  Since it *is possible* that the Skater's shots value is zero, an initial if-statement 'short-circuits' the method before it attempts a problematic division-by-zero.
