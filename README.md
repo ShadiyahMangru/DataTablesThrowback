@@ -47,29 +47,9 @@ public static Roster getInstance(){
 **Motivation for use:** The Singleton Design Pattern enables creation of only one instance of the Roster object in memory within the application.  This single instance is shared among all classes (and threads) within the application.  Since all constructors in a singleton class are marked private, no other class can instantiate another version of the Roster.  Singletons may improve application performance by loading reusable data that would otherwise be time consuming to store and reload each time needed.  Coordination of access to shared resources, such as coordinating write access to a file, may also be achieved through Singletons.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages compile-time safety strategies: (i) Generics, (ii) @Override annotation
+### This application leverages 2 *code-reusability and code-flexibility* strategies: (i) Method Overriding, (ii) Polymorphism
 
-- (i) The Roster class uses **Generics** in the roster field declaration:   `private ArrayList<HockeyPlayer> roster;`
-**Motivation for use:** Java SE 8 allows programmers to add *different types of objects* to an ArrayList.  Thanks to Generics, the benefits outweigh the pitfalls of this feature.  Specifically, this application’s code acts upon HockeyPlayer objects and their direct descendants (Skater objects and Goalie objects).  It is prudent to use Generics in the roster ArrayList declaration to ensure all roster elements be of (or be a direct subclass of) type HockeyPlayer to avoid runtime errors.  Generics in an object declaration alerts a programmer to type mismatch(es) *at compile time* – provides compile-time type safety.  In other words, generics in object declaration prevents runtime mishaps.
-
-- (ii) The Skater class uses an **annotated override of the toString() method** to facilitate compile-time-safe output that adheres to the data table format. 
-
-```
-@Override
-public String toString(){
-	return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, shootingPercent);
-}
-```
-
-**Motivation for use:** The @Override annotation signals to the compiler that the programmer intends for the annotated method to override a superclass method or implement an interface method.  If the contract for method overriding is not fulfilled, a compiler error prevents the application from running.  Since Java automatically calls toString() when printing out an object, ensuring that the toString() override was successful guarantees that any call to print a Skater object in this application will produce output that is compatible with the data table format.
-
-______________________________________________________________________________________________________________________________________
-### This application leverages 3 *code-reusability and code-flexibility* strategies: (i) Generics, (ii) Method Overriding, (iii) Polymorphism
-
-- (i) The roster field in the Roster class uses **Generics** to accept HockeyPlayer objects, a more general type of the Skater objects and Goalie objects currently found in the roster ArrayList.  **Motivation for use:**  Using the superclass or interface type of roster ArrayList objects allows us to have one roster comprised of different player types.
-
-
-- (ii) **(REVISE THIS LATER)** The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
+- (i) **(REVISE THIS LATER)** The direct descendants of the HockeyPlayer class (Skater and Goalie) override the printHPSP lambda defined in the HockeyPlayer parent class. 
 ```
 public Consumer<HockeyPlayer> printHPSP = hp -> {
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s |", hp.getTeam(), hp.getLastName(), hp.getJersey(), hp.getPosition()));
@@ -103,7 +83,7 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 ```
 
 
-- (iii) **(REVISE LATER)** The different definitions of the sP lambda in the Skater and Goalie classes demonstrate the principle of **Polymorphism** by facilitating a player stat calculation depending on context.    
+- (ii) **(REVISE LATER)** The different definitions of the sP lambda in the Skater and Goalie classes demonstrate the principle of **Polymorphism** by facilitating a player stat calculation depending on context.    
 
 ``` 
 //this Lambda accepts a player's goals and shots as parameters, and returns the player's shooting percentage
@@ -128,7 +108,7 @@ The Goalie class calls the printHPSP lambda defined in the Goalie class.
 When a Skater object calls the sP lambda, a shooting percentage is calculated.  When a Goalie object calls the sP lambda, a save percentage is calculated.  **Motivation for use:** through the Polymorphism achieved through class inheritance and methods/lambdas with the same name but different definitions depending on the class to which they belong, we may perform a single action – e.g., calculate – but go about this in a certain relevant way depending on context / object type.
 
 ______________________________________________________________________________________________________________________________________
-### This application leverages strategies to avoid program failure at the time the program is run: (i) Exception Handling via try-catch, (ii) Exception Handling via if-statements
+### This application leverages 4 strategies to avoid program failure at the time the program is run: (i) Exception Handling via try-catch, (ii) Exception Handling via if-statements, (iii) Generics, (iv) @Override annotation
 - (i) The Roster class leverages **Exception Handling via a try-catch block** to avoid program failure should any expected colons not exist in the stats-input line of each player entry of the input file.
 
 ```
@@ -168,3 +148,20 @@ public void setShootingPercent(int goals, int shots){
 }
 ``` 
 **Motivation for use:** The JVM throws an ArithmeticException when code attempts to divide by zero.  At the time the application is run, a Skater object’s shooting percent value is calculated after the application accepts roster data from the input file.  This setter method accepts a Skater's current goals and shots values as parameters – values not known until the application is run – then divides goals by shots to calculate an individual Skater's shooting percentage.  Since it *is possible* that the Skater's shots value is zero, an initial if-statement 'short-circuits' the method before it attempts a problematic division-by-zero.
+
+- (iii) The Roster class uses **Generics** in the roster field declaration to enable one roster of different player types, provided that each roster member is either a HockeyPlayer object or a direct descendant of a HockeyPlayer object.  
+
+``` private ArrayList<HockeyPlayer> roster; ```
+
+**Motivation for use:**  Java SE 8 allows programmers to add different types of objects to an ArrayList.  Specifying that only HockeyPlayer objects (in this case the most general accepted arrayList element type) or the direct descendants of HockeyPlayer objects (Skater objects and Goalie objects) be permitted in the roster arrayList, ensures that code that interacts with roster elements will know in advance the element types it will face.  This is a precaution against runtime mishaps.
+
+- (iv) The Skater class uses an **annotated override of the toString() method** to facilitate compile-time-safe output that adheres to the data table format. 
+
+```
+@Override
+public String toString(){
+	return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, shootingPercent);
+}
+```
+
+**Motivation for use:** The @Override annotation signals to the compiler that the programmer intends for the annotated method to override a superclass method or implement an interface method.  If the contract for method overriding is not fulfilled, a compiler error prevents the application from running.  Since Java automatically calls toString() when printing out an object, ensuring that the toString() override was successful guarantees that any call to print a Skater object in this application will produce output that is compatible with the data table format.
