@@ -18,6 +18,14 @@ import java.util.function.*;
 */
 
 public class DataTableMain{
+	//field
+	private String lastUpdated;
+	
+	//constructor
+	public DataTableMain(String lastUpdated){
+		this.lastUpdated = lastUpdated;	
+	}
+	
 	//utility methods
 	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
 	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
@@ -78,22 +86,21 @@ public class DataTableMain{
 	//outputs to screen a Skater and Goalie Stats data table
 	public void printDataTable(ArrayList<HockeyPlayer> team){
 		Comparator<HockeyPlayer> byPointsThenName = DataTableMain :: compareByPointsThenName; //the sort by method for the data table	
-		System.out.println("\n******* Points and Shooting Percentages of WSH Forwards and Defense (since 3/3/2019) *******\n");
+		System.out.println("\n******* Points and Shooting Percentages of WSH Forwards and Defense (since " + lastUpdated + ") *******\n");
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Points", "Shooting %"));
 		System.out.println("---------------------------------------------------------------");
 		team.stream()
 		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
-		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
 		.sorted(byPointsThenName) //sort stream with a Comparator!
-		.forEach(sk -> printHPStats.accept(sk)); //calls Skater classes' printHPSP
+		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
 		System.out.println("\n****************************************************************");	
 	
-		System.out.println("\n***************** Save Percentages of WSH Goalies (since 3/3/2019) *****************\n");
+		System.out.println("\n***************** Save Percentages of WSH Goalies (since " + lastUpdated + ") *****************\n");
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Wins", "Shots Against", "Saves", "Save %"));
 		System.out.println("---------------------------------------------------------------------------------------");
 		team.stream()
 		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
-		.forEach(gl -> printHPStats.accept(gl)); //calls Goalie class' printHPSP
+		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
 		System.out.println("\n******************************************************************************************");		
 	}
 	
@@ -106,7 +113,7 @@ public class DataTableMain{
 			team.add(r.getHockeyPlayer(i));
 		}
 		
-		DataTableMain dtm = new DataTableMain();
+		DataTableMain dtm = new DataTableMain("3/3/2019");
 		dtm.printDataTable(team);
 	}
 }
