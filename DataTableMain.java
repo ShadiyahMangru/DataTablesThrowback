@@ -1,10 +1,21 @@
-//DataTableMain class proves a main method to run the program and output the Stats Data Tables to the screen
-//the utility method references define Comparators to sort Skaters 
-//(i) in descending order by goals; when players tie for goals, they are sorted in ascending order by last name
-//(ii) in descending order by points; when players tie for points, they are sorted in ascending order by last name
-//the next utility method provides a static method to print a Skater Stats data table
 import java.util.*;
 import java.util.function.*;
+
+/**
+* DataTableMain class provides a main method to run the program and output the Stats Data Tables to the screen.
+*<p>
+* compareByGoalsThenName() sorts method parameters in descending order by goals; 
+* when players tie for goals, they are sorted in ascending order by last name.
+* compareByPointsThenName() sorts method parameters in descending order by points; 
+* when players tie for points, they are sorted in ascending order by last name.
+*<p>
+* HPTeam is a utility Lambda that sets a HockeyPlayer's team to 'WSH'.
+* printHPStats is a utility Lambda that dynamically prints a HockeyPlayer's position-dependent data table stats entry. 
+* printDataTable outputs the roster's Stats Data Table to the screen.
+*
+* @author  Shadiyah Mangru
+* @since   2019
+*/
 
 public class DataTableMain{
 	//utility methods
@@ -42,13 +53,6 @@ public class DataTableMain{
 		return 0;
 	}
 
-	//utility method reference
-	//Comparator that sorts HockeyPlayers (who are Not Goalies) by goals then lastname, written with a Java SE 8 method reference
-	Comparator<HockeyPlayer> byGoalsThenName = DataTableMain :: compareByGoalsThenName;
-	
-	//Comparator that sorts HockeyPlayers (who are Not Goalies) by points then lastname, written with a Java SE 8 method reference
-	Comparator<HockeyPlayer> byPointsThenName = DataTableMain :: compareByPointsThenName;
-	
 	//utility Lambdas
 	//this Lambda sets team of HockeyPlayer object,
 	//dynamically casts HockeyPlayer object to Skater/Goalie object
@@ -73,6 +77,7 @@ public class DataTableMain{
 	//utility method
 	//outputs to screen a Skater and Goalie Stats data table
 	public void printDataTable(ArrayList<HockeyPlayer> team){
+		Comparator<HockeyPlayer> byPointsThenName = DataTableMain :: compareByPointsThenName; //the sort by method for the data table	
 		System.out.println("\n******* Points and Shooting Percentages of WSH Forwards and Defense (since 3/3/2019) *******\n");
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Points", "Shooting %"));
 		System.out.println("---------------------------------------------------------------");
