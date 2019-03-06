@@ -73,34 +73,4 @@ class Goalie extends HockeyPlayer{
 	public String toString(){
 		return String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), wins, shotsAgainst, saves, savePercent);	
 	}
-	
-	//utility Lambdas
-	
-	//this Lambda sets team of HockeyPlayer object,
-	//casts HockeyPlayer object to Goalie object
-	//calculates and sets Goalie object's save percentage
-	//returns Goalie object
-	public Function<HockeyPlayer, Goalie> HPTeamAndSP = hp -> {
-		hp.setTeam(hp.assignTeam.get()); //calls Supplier
-		Goalie g = (Goalie)hp; //narrowing cast of HockeyPlayer object to a Goalie object
-		return g;
-	};
-	
-	public Consumer<HockeyPlayer> printHPSP = hp -> {
-		Goalie g = HPTeamAndSP.apply(hp);
-		System.out.println(g);
-	};
-	
-	//utility method
-	//this method accepts an ArrayList<HockeyPlayer> team parameter, keeps only Goalies in input stream,
-	//then outputs to screen a Goalie Stats data table
-	public static void printGoalieStats(ArrayList<HockeyPlayer> team){
-		System.out.println("\n***************** Save Percentages of WSH Goalies (since 3/3/2019) *****************\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Wins", "Shots Against", "Saves", "Save %"));
-		System.out.println("---------------------------------------------------------------------------------------");
-		team.stream()
-		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
-		.forEach(gl -> {Goalie g = (Goalie)gl; g.printHPSP.accept(gl);}); //calls Goalie class' printHPSP
-		System.out.println("\n******************************************************************************************");		
-	}
 }
