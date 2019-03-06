@@ -1,4 +1,8 @@
 //DataTableMain class proves a main method to run the program and output the Stats Data Tables to the screen
+//the utility method references define Comparators to sort Skaters 
+//(i) in descending order by goals; when players tie for goals, they are sorted in ascending order by last name
+//(ii) in descending order by points; when players tie for points, they are sorted in ascending order by last name
+//the next utility method provides a static method to print a Skater Stats data table
 import java.util.*;
 import java.util.function.*;
 
@@ -6,7 +10,7 @@ public class DataTableMain{
 	//utility methods
 	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
 	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
-	public int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
+	public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
 		try{
 			Skater s1 = (Skater)h1;
 			Skater s2 = (Skater)h2;
@@ -23,7 +27,7 @@ public class DataTableMain{
 	
 	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
 	//(i) descending order by points, and (ii) ascending order by last name of Skater objects with equal points.
-	public int compareByPointsThenName(HockeyPlayer h1, HockeyPlayer h2){
+	public static int compareByPointsThenName(HockeyPlayer h1, HockeyPlayer h2){
 		try{
 			Skater s1 = (Skater)h1;
 			Skater s2 = (Skater)h2;
