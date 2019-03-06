@@ -1,22 +1,21 @@
-//the Goalie class provides a template for the Goalie object
-//b/c Goalie 'is-a' HockeyPlayer, the Goalie class inherits from the HockeyPlayer class
-//the Goalie class/object has indirect access to the private lastName, position, jersey, and team fields of the 
-//parent HockeyPlayer class/object through inheritance of the getLastName(), getPosition(), getJersey(),
-//and getTeam() methods
+/**
+* The Goalie class provides a template for the Goalie object.  Goalie 'is-a' HockeyPlayer, 
+* therefore the Goalie class inherits from the HockeyPlayer class. 
+* <p>
+* A Goalie object has indirect access to the private lastName, position, jersey, and team 
+* instance variables of its parent HockeyPlayer object.  This access is through inheritance of the 
+* getLastName(), getPosition(), getJersey(), and getTeam() methods.
+* <p>
+* A Goalie object also has saves, shots against, wins, and save percentage values.
+* <p>
+* One must initialize a Goalie object with its corresponding HockeyPlayer object 
+* AND values for saves, shots against, and wins.
+* 
+* @author  Shadiyah Mangru
+* @since   2019 
+*/
 
-//the Goalie object also has saves, shots against, wins, and save percentage values.
-//one must initialize the Goalie object with a HockeyPlayer object AND values for saves, shots against, and wins
-//setters exist to...
-//getSaves(), getShotsAgainst(), getWins(), and getSavePercent() exist so that other classes may not have direct access
-//to private Goalie class variables.
-
-//the utility Lambdas exist to...
-//the utility method provides a static method to print a Goalie Stats data table
-
-import java.util.*;
-import java.util.function.*;
-
-class Goalie extends HockeyPlayer{
+public class Goalie extends HockeyPlayer{
 	//fields
 	private int saves;
 	private int shotsAgainst;
@@ -69,6 +68,10 @@ class Goalie extends HockeyPlayer{
 		return savePercent;	
 	}
 	
+	/**
+	* toString() returns the team, last name, jersey, wins, shots against, saves, and save percentage values of a Goalie object, formatted for a data table.
+	* @return data table formatting of a Goalie object's instance variable values (in the form of a String)
+	*/
 	@Override
 	public String toString(){
 		return String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), wins, shotsAgainst, saves, savePercent);	
