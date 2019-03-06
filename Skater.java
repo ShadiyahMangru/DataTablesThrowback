@@ -10,8 +10,6 @@
 //getGoals(), getAssists(), getPoints(), getShots(), getShootingPercent() exist so that other classes may not have direct access
 //to private Skater class variables.
 
-//the utility Lambdas exists to...
-
 //the utility method references define Comparators to sort Skaters 
 //(i) in descending order by goals; when players tie for goals, they are sorted in ascending order by last name
 //(ii) in descending order by points; when players tie for points, they are sorted in ascending order by last name
@@ -55,7 +53,7 @@ public class Skater extends HockeyPlayer{
 		this.shots = shots;	
 	}
 	
-	private void setShootingPercent(int goals, int shots){
+	public void setShootingPercent(int goals, int shots){
 		if(shots == 0){
 			shootingPercent = (float)0;
 		}
@@ -86,78 +84,5 @@ public class Skater extends HockeyPlayer{
 	@Override
 	public String toString(){
 		return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), points, shootingPercent);
-	}
-	
-	//utility Lambdas
-	
-	//this Lambda sets team of HockeyPlayer object,
-	//casts HockeyPlayer object to Skater object
-	//returns Skater object
-	private Function<HockeyPlayer, Skater> HPTeamAndSP = hp ->{
-		hp.setTeam(hp.assignTeam.get()); //calls Supplier
-		Skater s = (Skater)hp; //narrowing cast of HockeyPlayer object to a Skater object
-		return s;
-	};
-	
-	public Consumer<HockeyPlayer> printHPSP = hp -> {
-		Skater s = HPTeamAndSP.apply(hp);
-		System.out.println(s);
-	};
-	
-	//utility methods
-	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
-	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
-	public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
-		try{
-			Skater s1 = (Skater)h1;
-			Skater s2 = (Skater)h2;
-			if(s2.getGoals() - s1.getGoals() != 0){
-				return s2.getGoals() - s1.getGoals();	
-			}
-			return s1.getLastName().compareTo(s2.getLastName());	
-		}
-		catch(ClassCastException cce){
-			System.out.println("Exception: " + cce);	
-		}
-		return 0;
-	}	
-	
-	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
-	//(i) descending order by points, and (ii) ascending order by last name of Skater objects with equal points.
-	public static int compareByPointsThenName(HockeyPlayer h1, HockeyPlayer h2){
-		try{
-			Skater s1 = (Skater)h1;
-			Skater s2 = (Skater)h2;
-			if(s2.getPoints() - s1.getPoints() != 0){
-				return s2.getPoints() - s1.getPoints();	
-			}
-			return s1.getLastName().compareTo(s2.getLastName());	
-		}
-		catch(ClassCastException cce){
-			System.out.println("Exception: " + cce);	
-		}
-		return 0;
-	}	
-	
-	//utility method reference
-	//Comparator that sorts HockeyPlayers (who are Not Goalies) by goals then lastname, written with a Java SE 8 method reference
-	static Comparator<HockeyPlayer> byGoalsThenName = Skater :: compareByGoalsThenName;
-	
-	//Comparator that sorts HockeyPlayers (who are Not Goalies) by points then lastname, written with a Java SE 8 method reference
-	static Comparator<HockeyPlayer> byPointsThenName = Skater :: compareByPointsThenName;
-	
-	//utility method
-	//this method accepts an ArrayList<HockeyPlayer> team parameter, removes Goalies from input stream, sorts stream by goals then name,
-	//then outputs to screen a Skater Stats data table
-	public static void printSkaterStats(ArrayList<HockeyPlayer> team){
-		System.out.println("\n******* Points and Shooting Percentages of WSH Forwards and Defense (since 3/3/2019) *******\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Points", "Shooting %"));
-		System.out.println("---------------------------------------------------------------");
-		team.stream()
-		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
-		//.filter(Lambdas.evenNumberPlayers :: test) //calls Predicate w/a method reference
-		.sorted(byPointsThenName) //sort stream with a Comparator!
-		.forEach(sk -> {Skater s = (Skater)sk; s.printHPSP.accept(s);}); //calls Skater classes' printHPSP
-		System.out.println("\n****************************************************************");	
 	}
 }
