@@ -1,22 +1,20 @@
-//the Skater class provides a template for the Skater object
-//b/c Skater 'is-a' HockeyPlayer, the Skater class inherits from the HockeyPlayer class
-//the Skater class/object has indirect access to the private lastName, position, jersey, and team fields of the 
-//parent HockeyPlayer class/object through inheritance of the getLastName(), getPosition(), getJersey(),
-//and getTeam() methods
+/**
+* The Skater class provides a template for the Skater object.  Skater 'is-a' HockeyPlayer, 
+* therefore the Skater class inherits from the HockeyPlayer class. 
+* <p>
+* A Skater object has indirect access to the private lastName, position, jersey, and team 
+* instance variables of its parent HockeyPlayer object.  This access is through inheritance of the 
+* getLastName(), getPosition(), getJersey(), and getTeam() methods.
+* <p>
+* A Skater object also has goals, assists, points, shots, and shooting percent values.
+* <p>
+* One must initialize a Skater object with its corresponding HockeyPlayer object 
+* AND values for goals, assists and shots.
+* 
+* @author  Shadiyah Mangru
+* @since   2019 
+*/
 
-//the Skater object also has goals, assists, points, shots, and shooting percent values.
-//one must initialize the Skater object with a HockeyPlayer object AND values for goals, assists and shots
-//setters exist to...
-//getGoals(), getAssists(), getPoints(), getShots(), getShootingPercent() exist so that other classes may not have direct access
-//to private Skater class variables.
-
-//the utility method references define Comparators to sort Skaters 
-//(i) in descending order by goals; when players tie for goals, they are sorted in ascending order by last name
-//(ii) in descending order by points; when players tie for points, they are sorted in ascending order by last name
-//the next utility method provides a static method to print a Skater Stats data table
-
-import java.util.*;
-import java.util.function.*;
 
 public class Skater extends HockeyPlayer{
 	//fields
@@ -81,6 +79,10 @@ public class Skater extends HockeyPlayer{
 		return shootingPercent;	
 	}
 	
+	/**
+	* toString() returns the team, last name, jersey, points, and shooting percent values of a Skater object, formatted for a data table.
+	* @return data table formatting of a Skater object's instance variable values (in the form of a String)
+	*/
 	@Override
 	public String toString(){
 		return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), points, shootingPercent);
