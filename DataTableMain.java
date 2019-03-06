@@ -81,6 +81,9 @@ public class DataTableMain{
 		}
 	};	
 	
+	public <HockeyPlayer> Predicate<HockeyPlayer> not(Predicate<HockeyPlayer> h) {
+		return h.negate();
+	}
 	
 	//utility method
 	//outputs to screen a Skater and Goalie Stats data table
@@ -90,7 +93,7 @@ public class DataTableMain{
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Points", "Shooting %"));
 		System.out.println("---------------------------------------------------------------");
 		team.stream()
-		.filter(HockeyPlayer.filterOutGoalies :: test) //calls Predicate w/a method reference
+		.filter(not(HockeyPlayer.keepGoalies :: test)) //calls Predicate w/a method reference
 		.sorted(byPointsThenName) //sort stream with a Comparator!
 		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
 		System.out.println("\n****************************************************************");	
