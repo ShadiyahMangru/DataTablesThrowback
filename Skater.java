@@ -1,12 +1,14 @@
 /**
-* The Skater class provides a template for the Skater object.  Skater 'is-a' HockeyPlayer, 
+* The Skater class provides a template for the Skater object.  Skater (read: Forwards and Defense) 'is-a' HockeyPlayer, 
 * therefore the Skater class inherits from the HockeyPlayer class. 
 * <p>
 * A Skater object has indirect access to the private lastName, position, jersey, and team 
 * instance variables of its parent HockeyPlayer object.  This access is through inheritance of the 
 * getLastName(), getPosition(), getJersey(), and getTeam() methods.
 * <p>
-* A Skater object also has goals, assists, points, shots, and shooting percent values.
+* A Skater object also has goals, assists, points, shots, and shooting percent values.  Getter methods
+* return the current values of these for the Skater object to which it is tethered.   Setter methods 
+* calculate points (from goals and assists) and shooting percent (from goals and shots).
 * <p>
 * One must initialize a Skater object with its corresponding HockeyPlayer object 
 * AND values for goals, assists and shots.
@@ -25,6 +27,14 @@ public class Skater extends HockeyPlayer{
 	private float shootingPercent;
 	
 	//constructor
+	/**
+	* The Skater constructor requires this Skater's corresponding HockeyPlayer object, 
+	* goals, assists, and shots values to initialize a new Skater object.
+	* @param hp the corresponding HockeyPlayer object 
+	* @param goals 
+	* @param assists 
+	* @param shots 
+	*/
 	public Skater(HockeyPlayer hp, int goals, int assists, int shots){
 		super(hp.getLastName(), hp.getPosition(), hp.getJersey(), hp.getTeam());
 		this.goals = goals;
@@ -34,23 +44,22 @@ public class Skater extends HockeyPlayer{
 		setShootingPercent(goals, shots);
 	}
 	
-	//setters
-	public void setGoals(int goals){
-		this.goals = goals;	
-	}
-	
-	public void setAssists(int assists){
-		this.assists = assists;	
-	}
-	
+	/**
+	* The setPoints method calculates this Skater object's points value 
+	* from this Skater object's goals and assists values.
+	* @param goals 
+	* @param assists 
+	*/
 	public void setPoints(int goals, int assists){
 		points = goals+assists;	
 	}
 	
-	public void setShots(int shots){
-		this.shots = shots;	
-	}
-	
+	/**
+	* The setShootingPercent method calculates this Skater object's shooting percentage
+	* from this Skater object's goals and shots values.
+	* @param goals 
+	* @param shots 
+	*/
 	public void setShootingPercent(int goals, int shots){
 		if(shots == 0){
 			shootingPercent = (float)0;
