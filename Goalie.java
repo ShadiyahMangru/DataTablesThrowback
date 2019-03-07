@@ -6,7 +6,9 @@
 * instance variables of its parent HockeyPlayer object.  This access is through inheritance of the 
 * getLastName(), getPosition(), getJersey(), and getTeam() methods.
 * <p>
-* A Goalie object also has saves, shots against, wins, and save percentage values.
+* A Goalie object also has saves, shots against, wins, and save percentage values.  Getter methods
+* return the current values of these for the Goalie object to which it is tethered.  A setter method calculates
+* save percentage (from saves and shots against).
 * <p>
 * One must initialize a Goalie object with its corresponding HockeyPlayer object 
 * AND values for saves, shots against, and wins.
@@ -23,6 +25,14 @@ public class Goalie extends HockeyPlayer{
 	private float savePercent;
 	
 	//constructor
+	/**
+	* The Goalie constructor requires this Goalie's corresponding HockeyPlayer object, 
+	* saves, shots against, and wins values to initialize a new Goalie object.
+	* @param hp the corresponding HockeyPlayer object
+	* @param saves 
+	* @param shotsAgainst 
+	* @param wins 
+	*/
 	public Goalie(HockeyPlayer hp, int saves, int shotsAgainst, int wins){
 		super(hp.getLastName(), hp.getPosition(), hp.getJersey(), hp.getTeam());
 		this.saves = saves;
@@ -32,19 +42,13 @@ public class Goalie extends HockeyPlayer{
 	}
 	
 	//setters
-	public void setSaves(int saves){
-		this.saves = saves;	
-	}
-	
-	public void setShotsAgainst(int shotsAgainst){
-		this.shotsAgainst = shotsAgainst;	
-	}
-	
-	public void setWins(int wins){
-		this.wins = wins;	
-	}
-	
-	private void setSavePercent(int saves, int shotsAgainst){
+	/**
+	* The setSavePercent method calculates this Goalie object's save percentage
+	* from this Goalie object's saves and shots against values.
+	* @param saves 
+	* @param shotsAgainst 
+	*/
+	public void setSavePercent(int saves, int shotsAgainst){
 		if(shotsAgainst == 0){
 			savePercent = (float)0;
 		}
