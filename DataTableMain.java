@@ -110,16 +110,16 @@ public class DataTableMain{
 	}
 	
 	public void mainMenu(ArrayList<HockeyPlayer> team){
-		System.out.println("*******************************************************");
-		System.out.println(String.format("%-52s %2s", "**** Welcome to Hockey Stats Data Table Wizard! ****", "*"));
-		System.out.println(String.format("%-52s %2s", "", "*"));
-		System.out.println(String.format("%-52s %2s", "Make a Sort By Selection", "*"));
-		System.out.println(String.format("%-52s %2s", "1.) Points", "*"));
-		System.out.println(String.format("%-52s %2s", "2.) Goals", "*"));
-		System.out.println(String.format("%-52s %2s", "", "*"));
-		System.out.println(String.format("%-52s %2s", "3.) Exit", "*"));
-		System.out.println(String.format("%-52s %2s", "", "*"));
-		System.out.println("*******************************************************");
+		System.out.println("\t**********************************************************");
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "**** Welcome to Hockey Stats Data Table Wizard! ****", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "     Make a Sort By Selection", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      1.) Points", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      2.) Goals", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      3.) Exit", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
+		System.out.println("\t**********************************************************");
 		Console console = System.console();
 		String userInput = "";
 		if(console != null){
@@ -132,7 +132,9 @@ public class DataTableMain{
 		else if(userInput.equals("2")){
 			sortBy = DataTableMain :: compareByGoalsThenName; //the sort by method for the data table	
 		}
-		//else it defaults to sorting by points
+		else{
+			sortBy = DataTableMain :: compareByPointsThenName; //the sort by method for the data table	
+		}
 		printDataTable(team, sortBy);
 		mainMenu(team);
 	}
