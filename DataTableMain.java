@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.function.*;
+import java.io.Console;
 
 /**
 * DataTableMain class provides a main method to run the program and output the Stats Data Tables to the screen.
@@ -20,10 +21,12 @@ import java.util.function.*;
 public class DataTableMain{
 	//field
 	private String lastUpdated;
+	private Comparator<HockeyPlayer> sortBy;
 	
 	//constructor
 	public DataTableMain(String lastUpdated){
 		this.lastUpdated = lastUpdated;	
+		sortBy = DataTableMain :: compareByPointsThenName; //the DEFAULT sort by method for the data table
 	}
 	
 	//utility methods
@@ -87,24 +90,51 @@ public class DataTableMain{
 	
 	//utility method
 	//outputs to screen a Skater and Goalie Stats data table
-	public void printDataTable(ArrayList<HockeyPlayer> team){
-		Comparator<HockeyPlayer> byPointsThenName = DataTableMain :: compareByPointsThenName; //the sort by method for the data table	
-		System.out.println("\n******* Points and Shooting Percentages of WSH Forwards and Defense (since " + lastUpdated + ") *******\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", "Team", "Player", "#", "Points", "Shooting %"));
-		System.out.println("---------------------------------------------------------------");
+	public void printDataTable(ArrayList<HockeyPlayer> team, Comparator<HockeyPlayer> sortBy){	
+		System.out.println("\n******* Stats of WSH Forwards and Defense (since " + lastUpdated + ") *******\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Points", "Shooting %"));
+		System.out.println("----------------------------------------------------------------------------");
 		team.stream()
 		.filter(not(HockeyPlayer.keepGoalies :: test)) //calls Predicate w/a method reference
-		.sorted(byPointsThenName) //sort stream with a Comparator!
+		.sorted(sortBy) //sort stream with a Comparator!
 		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
-		System.out.println("\n****************************************************************");	
+		System.out.println("\n***********************************************************************************");	
 	
-		System.out.println("\n***************** Save Percentages of WSH Goalies (since " + lastUpdated + ") *****************\n");
+		System.out.println("\n***************** Stats of WSH Goalies (since " + lastUpdated + ") *****************\n");
 		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Wins", "Shots Against", "Saves", "Save %"));
 		System.out.println("---------------------------------------------------------------------------------------");
 		team.stream()
 		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
 		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
 		System.out.println("\n******************************************************************************************");		
+	}
+	
+	public void mainMenu(ArrayList<HockeyPlayer> team){
+		System.out.println("*******************************************************");
+		System.out.println(String.format("%-52s %2s", "**** Welcome to Hockey Stats Data Table Wizard! ****", "*"));
+		System.out.println(String.format("%-52s %2s", "", "*"));
+		System.out.println(String.format("%-52s %2s", "Make a Sort By Selection", "*"));
+		System.out.println(String.format("%-52s %2s", "1.) Points", "*"));
+		System.out.println(String.format("%-52s %2s", "2.) Goals", "*"));
+		System.out.println(String.format("%-52s %2s", "", "*"));
+		System.out.println(String.format("%-52s %2s", "3.) Exit", "*"));
+		System.out.println(String.format("%-52s %2s", "", "*"));
+		System.out.println("*******************************************************");
+		Console console = System.console();
+		String userInput = "";
+		if(console != null){
+			userInput = console.readLine();
+			console.writer().println("Your selection: " + userInput);
+		}
+		if(userInput.equals("3")){
+			System.exit(0);
+		}
+		else if(userInput.equals("2")){
+			sortBy = DataTableMain :: compareByGoalsThenName; //the sort by method for the data table	
+		}
+		//else it defaults to sorting by points
+		printDataTable(team, sortBy);
+		mainMenu(team);
 	}
 	
 	//main method that prints (to console) the sorted stat chart of the current roster
@@ -116,7 +146,7 @@ public class DataTableMain{
 			team.add(r.getHockeyPlayer(i));
 		}
 		
-		DataTableMain dtm = new DataTableMain("3/3/2019");
-		dtm.printDataTable(team);
+		DataTableMain dtm = new DataTableMain("3/6/2019");
+		dtm.mainMenu(team);
 	}
 }
