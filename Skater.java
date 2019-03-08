@@ -94,6 +94,6 @@ public class Skater extends HockeyPlayer{
 	*/
 	@Override
 	public String toString(){
-		return String.format("| %-4s | %-15s | %-4s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), points, shootingPercent);
+		return String.format("| %-4s | %-15s | %-4s | %-7s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, points, shootingPercent);
 	}
 }
