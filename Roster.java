@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -9,11 +10,10 @@ import java.util.function.*;
 * Singletons may also improve performance by loading reusable data that would otherwise be 
 * time consuming to store and reload each time it is needed. 
 <p>
-* The Roster class stores the file location of input data, and uses this information to initialize a Scanner object.
+* The Roster class stores the file location of input data, and uses this information to initialize a Path object.
 <p>
 * Lambdas provide means to:
-* (i) read in data with no leading and no trailing whitespace (Supplier Lambda)
-* (ii) read in data from input file that initializes fields of a HockeyPlayer object (Function Lambda)
+* (ii) read in data from input file that initializes fields of a HockeyPlayer object (Supplier Lambda)
 * (iii) read in data from input file that initializes fields of a Skater object (Function Lambda)
 * (iv) read in data from input file that initializes fields of a Goalie object (Function Lambda)
 <p>
@@ -33,16 +33,17 @@ import java.util.function.*;
 
 public class Roster{
 	//fields
-	private Scanner sc;
+	private List<String> rosterData;
 	private final String fileLoc = "C:\\Users\\593476\\Desktop\\Java Programs\\TabularHockeyData\\2019WSHStats.txt";
-	
+	private static int counter;
 	private ArrayList<HockeyPlayer> roster;
 	
 	//PRIVATE constructor
 	//all constructors in a singleton class are marked private, which ensures that no other class is capable
 	//of instantiating another version of the class
 	private Roster(){
-		setSc();
+		counter = 0;
+		setRosterData();
 		setRoster();
 	}
 	
@@ -59,18 +60,19 @@ public class Roster{
 	}
 	
 	//setters
-	//initialize a new Scanner object that will read input from file specified by the fileLoc field.
-	private void setSc(){
+	//read all lines of the input roster data text file, and store this input data in an ordered List of String values.
+	private void setRosterData(){
+		rosterData = new ArrayList<>(); //this line avoids a null pointer exception if input file does not exist
 		try{
-			//.txt file that stores data needed for calculations
-			File file = new File(fileLoc); 
-    			sc = new Scanner(file); 
+			//.txt file that stores data needed for calculations 
+			Path path = Paths.get(fileLoc);
+    			rosterData = Files.readAllLines(path);
 		}
 		catch(IOException io){ //exception handling when unable to access input file specified
-    			System.out.println("Exception: " + io);	
+    			System.out.println("Exception1: " + io);	
     		}
     		catch(Exception e){
-    			System.out.println("Exception: " + e);
+    			System.out.println("Exception2: " + e);
     		}
 	}
 	
@@ -79,22 +81,22 @@ public class Roster{
 	*/
 	public void setRoster(){
 		roster = new ArrayList<>();
-		try{
-    			while (sc.hasNextLine()) {
-    				HockeyPlayer hp = setHP.get(); //create a HockeyPlayer object with last name, position and jersey information from the data file specified
-    				if(HockeyPlayer.filterOutGoalies.test(hp)){ //if HockeyPlayer is NOT a Goalie
-    					roster.add(setSkater.apply(hp)); //use the the setSkater Lambda to initialize a Skater object (w/input file data) and add this Skater object to the roster
+			try{
+				while (counter < rosterData.size()) {
+					HockeyPlayer hp = setHP.get(); //create a HockeyPlayer object with last name, position and jersey information from the data file specified
+					if(HockeyPlayer.filterOutGoalies.test(hp)){ //if HockeyPlayer is NOT a Goalie
+						roster.add(setSkater.apply(hp)); //use the the setSkater Lambda to initialize a Skater object (w/input file data) and add this Skater object to the roster
+					}
+					else{ //if HockeyPlayer is a Goalie
+						roster.add(setGoalie.apply(hp)); //use the the setGoalie Lambda to initialize a Goalie object (w/input file data) and add this Goalie object to the roster
+					}
+					counter++; //skip over * input (and proceed to processing next input line)
 				}
-				else{ //if HockeyPlayer is a Goalie
-					roster.add(setGoalie.apply(hp)); //use the the setGoalie Lambda to initialize a Goalie object (w/input file data) and add this Goalie object to the roster
-				}
-				vals.get();   //skip over * input with the vals Lambda 
-    			}
-    		}	
-    		catch(Exception e){
-    			System.out.println("Exception: " + e);
+			}	
+			catch(Exception e){
+				System.out.println("Exception3: " + e + counter);
+			}
     		}
-	}
 	
 	//getters
 	/**
@@ -115,11 +117,11 @@ public class Roster{
 	}
 	
 	//utility Lambdas
-	/**
-	* This helper lambda returns a line of data from the input file with no leading and no trailing whitespace
-	* @return String
-	*/
-	public Supplier<String> vals = () -> {return sc.nextLine().trim();};
+	///**
+	//* This helper lambda returns a line of data from the input file with no leading and no trailing whitespace
+	//* @return String
+	//*/
+	//public Supplier<String> vals = () -> {return sc.nextLine().trim();};
 	
 	/**
 	* This helper lambda reads in the name, position, and jersey fields of a HockeyPlayer object 
@@ -127,9 +129,12 @@ public class Roster{
 	* @return HockeyPlayer object
 	*/
 	public Supplier<HockeyPlayer> setHP = () -> {
-		String name = vals.get();
-    		String position = vals.get();
-    		int jersey = Integer.parseInt(vals.get());
+		String name = rosterData.get(counter).trim();
+		counter++;
+    		String position = rosterData.get(counter).trim();
+    		counter++;
+    		int jersey = Integer.parseInt(rosterData.get(counter).trim());
+    		counter++;
     		return new HockeyPlayer(name, position, jersey);
 	};
 	
@@ -141,12 +146,13 @@ public class Roster{
 	*/
 	public Function<HockeyPlayer, Skater> setSkater = hp ->{
 		try{ 
-			String[] skaterStats = vals.get().split(":"); //goals at sS[0], assists at sS[1], and shots at sS[2]
+			String[] skaterStats = rosterData.get(counter).trim().split(":"); //goals at sS[0], assists at sS[1], and shots at sS[2]
+			counter++;
 			Skater s = new Skater(hp, Integer.parseInt(skaterStats[0]), Integer.parseInt(skaterStats[1]), Integer.parseInt(skaterStats[2]));
 			return s;
     		}
     		catch(ArrayIndexOutOfBoundsException aiobe){ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
-    			System.out.println("Exception: " + aiobe);	
+    			System.out.println("Exception4: " + aiobe);	
     			Skater s = new Skater(hp, -1, -1, -1);
     			return s;
     		}
@@ -160,12 +166,13 @@ public class Roster{
 	*/
 	public Function <HockeyPlayer, Goalie> setGoalie = hp -> {
 		try{ 
-			String[] goalieStats = vals.get().split(":"); //saves at gS[0], shotsAgainst at gS[1], wins at gS[2]
+			String[] goalieStats = rosterData.get(counter).trim().split(":"); //saves at gS[0], shotsAgainst at gS[1], wins at gS[2]
+			counter++;
 			Goalie g = new Goalie(hp, Integer.parseInt(goalieStats[0]), Integer.parseInt(goalieStats[1]), Integer.parseInt(goalieStats[2]));
     			return g;
 		}
 		catch(ArrayIndexOutOfBoundsException aiobe){ //exception handling of ArrayIndexOutOfBoundsException when any colon missing from input file
-			System.out.println("Exception: " + aiobe);	
+			System.out.println("Exception5: " + aiobe);	
 			Goalie g = new Goalie(hp, -1, -1, -1);
 			return g;
 		}
