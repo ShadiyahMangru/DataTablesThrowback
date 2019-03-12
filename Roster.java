@@ -139,41 +139,41 @@ public class Roster{
 	};
 	
 	/**
-	* This lambda accepts a HockeyPlayer object and, after reading-in goals, assists, 
+	* This lambda accepts a HockeyPlayer object and, after reading-in games played, goals, assists, 
 	* and shots values, initializes and returns a new Skater object. 
 	* @param HockeyPlayer object
 	* @return Skater object
 	*/
 	public Function<HockeyPlayer, Skater> setSkater = hp ->{
 		try{ 
-			String[] skaterStats = rosterData.get(counter).trim().split(":"); //goals at sS[0], assists at sS[1], and shots at sS[2]
+			String[] skaterStats = rosterData.get(counter).trim().split(":"); //gamesPlayed at sS[0], goals at sS[1], assists at sS[2], and shots at sS[3]
 			counter++;
-			Skater s = new Skater(hp, Integer.parseInt(skaterStats[0]), Integer.parseInt(skaterStats[1]), Integer.parseInt(skaterStats[2]));
+			Skater s = new Skater(hp, Integer.parseInt(skaterStats[0]), Integer.parseInt(skaterStats[1]), Integer.parseInt(skaterStats[2]), Integer.parseInt(skaterStats[3]));
 			return s;
     		}
     		catch(ArrayIndexOutOfBoundsException aiobe){ //exception handling of ArrayIndexOutOfBoundsException when colon is missing from input file
     			System.out.println("Exception4: " + aiobe);	
-    			Skater s = new Skater(hp, -1, -1, -1);
+    			Skater s = new Skater(hp, -1, -1, -1, -1);
     			return s;
     		}
 	};
 	
 	/**
-	* This lambda accepts a HockeyPlayer object and, after reading-in saves, shots against, 
+	* This lambda accepts a HockeyPlayer object and, after reading-in games played, saves, shots against, 
 	* and wins values, initializes and returns a new Goalie object. 
 	* @param HockeyPlayer object
 	* @return Goalie object
 	*/
 	public Function <HockeyPlayer, Goalie> setGoalie = hp -> {
 		try{ 
-			String[] goalieStats = rosterData.get(counter).trim().split(":"); //saves at gS[0], shotsAgainst at gS[1], wins at gS[2]
+			String[] goalieStats = rosterData.get(counter).trim().split(":"); //games played at gS[0], saves at gS[1], shotsAgainst at gS[2], wins at gS[3]
 			counter++;
-			Goalie g = new Goalie(hp, Integer.parseInt(goalieStats[0]), Integer.parseInt(goalieStats[1]), Integer.parseInt(goalieStats[2]));
+			Goalie g = new Goalie(hp, Integer.parseInt(goalieStats[0]), Integer.parseInt(goalieStats[1]), Integer.parseInt(goalieStats[2]), Integer.parseInt(goalieStats[3]));
     			return g;
 		}
 		catch(ArrayIndexOutOfBoundsException aiobe){ //exception handling of ArrayIndexOutOfBoundsException when any colon missing from input file
 			System.out.println("Exception5: " + aiobe);	
-			Goalie g = new Goalie(hp, -1, -1, -1);
+			Goalie g = new Goalie(hp, -1, -1, -1, -1);
 			return g;
 		}
 	};
