@@ -19,6 +19,7 @@
 
 public class Goalie extends HockeyPlayer{
 	//fields
+	private int gamesPlayed;
 	private int saves;
 	private int shotsAgainst;
 	private int wins;
@@ -29,12 +30,14 @@ public class Goalie extends HockeyPlayer{
 	* The Goalie constructor requires this Goalie's corresponding HockeyPlayer object, 
 	* saves, shots against, and wins values to initialize a new Goalie object.
 	* @param hp the corresponding HockeyPlayer object
+	* @param gamesPlayed; 
 	* @param saves 
 	* @param shotsAgainst 
 	* @param wins 
 	*/
-	public Goalie(HockeyPlayer hp, int saves, int shotsAgainst, int wins){
+	public Goalie(HockeyPlayer hp, int gamesPlayed, int saves, int shotsAgainst, int wins){
 		super(hp.getLastName(), hp.getPosition(), hp.getJersey(), hp.getTeam());
+		this.gamesPlayed = gamesPlayed;
 		this.saves = saves;
 		this.shotsAgainst = shotsAgainst;
 		this.wins = wins;
@@ -56,6 +59,10 @@ public class Goalie extends HockeyPlayer{
 	}
 	
 	//getters
+	public int getGamesPlayed(){
+		return gamesPlayed;	
+	}
+	
 	public int getSaves(){
 		return saves;	
 	}
@@ -73,11 +80,11 @@ public class Goalie extends HockeyPlayer{
 	}
 	
 	/**
-	* toString() returns the team, last name, jersey, wins, shots against, saves, and save percentage values of a Goalie object, formatted for a data table.
+	* toString() returns the team, last name, jersey, games played, wins, shots against, saves, and save percentage values of a Goalie object, formatted for a data table.
 	* @return data table formatting of a Goalie object's instance variable values (in the form of a String)
 	*/
 	@Override
 	public String toString(){
-		return String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), wins, shotsAgainst, saves, savePercent);	
+		return String.format("| %-4s | %-15s | %-4s | %-4s | %-4s | %-15s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), gamesPlayed, wins, shotsAgainst, saves, savePercent);	
 	}
 }
