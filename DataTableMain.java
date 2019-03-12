@@ -22,48 +22,14 @@ public class DataTableMain{
 	//field
 	private String lastUpdated;
 	private Comparator<HockeyPlayer> sortBy;
+	private String columnHeaders = "";
 	
 	//constructor
 	public DataTableMain(String lastUpdated){
 		this.lastUpdated = lastUpdated;	
-		sortBy = DataTableMain :: compareByPointsThenName; //the DEFAULT sort by method for the data table
+		sortBy = SortOptions :: compareByPointsThenName; //the DEFAULT sort by method for the data table
 	}
 	
-	//utility methods
-	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
-	//(i) descending order by goals scored, and (ii) ascending order by last name of Skater objects with equal goals.
-	public static int compareByGoalsThenName(HockeyPlayer h1, HockeyPlayer h2){
-		try{
-			Skater s1 = (Skater)h1;
-			Skater s2 = (Skater)h2;
-			if(s2.getGoals() - s1.getGoals() != 0){
-				return s2.getGoals() - s1.getGoals();	
-			}
-			return s1.getLastName().compareTo(s2.getLastName());	
-		}
-		catch(ClassCastException cce){
-			System.out.println("Exception: " + cce);	
-		}
-		return 0;
-	}	
-	
-	//this method sorts HockeyPlayer objects that may be narrowed to Skater objects in 
-	//(i) descending order by points, and (ii) ascending order by last name of Skater objects with equal points.
-	public static int compareByPointsThenName(HockeyPlayer h1, HockeyPlayer h2){
-		try{
-			Skater s1 = (Skater)h1;
-			Skater s2 = (Skater)h2;
-			if(s2.getPoints() - s1.getPoints() != 0){
-				return s2.getPoints() - s1.getPoints();	
-			}
-			return s1.getLastName().compareTo(s2.getLastName());	
-		}
-		catch(ClassCastException cce){
-			System.out.println("Exception: " + cce);	
-		}
-		return 0;
-	}
-
 	//utility Lambdas
 	//this Lambda sets team of HockeyPlayer object,
 	//dynamically casts HockeyPlayer object to Skater/Goalie object
@@ -91,22 +57,22 @@ public class DataTableMain{
 	//utility method
 	//outputs to screen a Skater and Goalie Stats data table
 	public void printDataTable(ArrayList<HockeyPlayer> team, Comparator<HockeyPlayer> sortBy){	
-		System.out.println("\n******* Stats of WSH Forwards and Defense (since " + lastUpdated + ") *******\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-7s | %-7s | %-15s |", "Team", "Player", "#", "Goals", "Points", "Shooting %"));
-		System.out.println("----------------------------------------------------------------------------");
+		System.out.println("\n**************** Stats of WSH Forwards and Defense (since " + lastUpdated + ") ****************\n");
+		System.out.println(columnHeaders);
+		System.out.println("-------------------------------------------------------------------------------------");
 		team.stream()
 		.filter(not(HockeyPlayer.keepGoalies :: test)) //calls Predicate w/a method reference
 		.sorted(sortBy) //sort stream with a Comparator!
 		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
-		System.out.println("\n***********************************************************************************");	
+		System.out.println("\n*************************************************************************************");	
 	
-		System.out.println("\n***************** Stats of WSH Goalies (since " + lastUpdated + ") *****************\n");
-		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "Wins", "Shots Against", "Saves", "Save %"));
-		System.out.println("---------------------------------------------------------------------------------------");
+		System.out.println("\n************************** Stats of WSH Goalies (since " + lastUpdated + ") **************************\n");
+		System.out.println(String.format("| %-4s | %-15s | %-4s | %-4s | %-4s | %-15s | %-7s | %-15s |", "Team", "Player", "#", "GP", "Wins", "Shots Against", "Saves", "Save %"));
+		System.out.println("---------------------------------------------------------------------------------------------");
 		team.stream()
 		.filter(HockeyPlayer.keepGoalies :: test) //calls Predicate w/a method reference		
 		.forEach(hp -> printHPStats.accept(hp)); //calls printHPStats
-		System.out.println("\n******************************************************************************************");		
+		System.out.println("\n*********************************************************************************************");		
 	}
 	
 	public void mainMenu(ArrayList<HockeyPlayer> team){
@@ -116,8 +82,10 @@ public class DataTableMain{
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "     Make a Sort By Selection", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "      1.) Points", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "      2.) Goals", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      3.) Shooting Percent", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      4.) Games Played", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      3.) Exit", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      5.) Exit", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
 		System.out.println("\t**********************************************************");
 		Console console = System.console();
@@ -126,14 +94,24 @@ public class DataTableMain{
 			userInput = console.readLine();
 			console.writer().println("Your selection: " + userInput);
 		}
-		if(userInput.equals("3")){
+		if(userInput.equals("5")){
 			System.exit(0);
 		}
+		else if(userInput.equals("4")){
+			sortBy = SortOptions :: compareByGPThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP **", "Goals", "Points", "Shooting %");
+		}
+		else if(userInput.equals("3")){
+			sortBy = SortOptions :: compareByShPercentThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points", "Shooting % **");
+		}
 		else if(userInput.equals("2")){
-			sortBy = DataTableMain :: compareByGoalsThenName; //the sort by method for the data table	
+			sortBy = SortOptions :: compareByGoalsThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals **", "Points", "Shooting %");
 		}
 		else{
-			sortBy = DataTableMain :: compareByPointsThenName; //the sort by method for the data table	
+			sortBy = SortOptions :: compareByPointsThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points **", "Shooting %");
 		}
 		printDataTable(team, sortBy);
 		mainMenu(team);
@@ -148,7 +126,7 @@ public class DataTableMain{
 			team.add(r.getHockeyPlayer(i));
 		}
 		
-		DataTableMain dtm = new DataTableMain("3/6/2019");
+		DataTableMain dtm = new DataTableMain("3/10/2019");
 		dtm.mainMenu(team);
 	}
 }
