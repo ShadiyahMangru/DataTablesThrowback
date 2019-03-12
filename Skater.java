@@ -6,12 +6,12 @@
 * instance variables of its parent HockeyPlayer object.  This access is through inheritance of the 
 * getLastName(), getPosition(), getJersey(), and getTeam() methods.
 * <p>
-* A Skater object also has goals, assists, points, shots, and shooting percent values.  Getter methods
+* A Skater object also has games played, goals, assists, points, shots, and shooting percent values.  Getter methods
 * return the current values of these for the Skater object to which it is tethered.   Setter methods 
 * calculate points (from goals and assists) and shooting percent (from goals and shots).
 * <p>
 * One must initialize a Skater object with its corresponding HockeyPlayer object 
-* AND values for goals, assists and shots.
+* AND values for games played, goals, assists and shots.
 * 
 * @author  Shadiyah Mangru
 * @since   2019 
@@ -20,6 +20,7 @@
 
 public class Skater extends HockeyPlayer{
 	//fields
+	private int gamesPlayed;
 	private int goals;
 	private int assists;
 	private int points;
@@ -29,14 +30,16 @@ public class Skater extends HockeyPlayer{
 	//constructor
 	/**
 	* The Skater constructor requires this Skater's corresponding HockeyPlayer object, 
-	* goals, assists, and shots values to initialize a new Skater object.
+	* games played, goals, assists, and shots values to initialize a new Skater object.
 	* @param hp the corresponding HockeyPlayer object 
+	* @param gamesPlayed 
 	* @param goals 
 	* @param assists 
 	* @param shots 
 	*/
-	public Skater(HockeyPlayer hp, int goals, int assists, int shots){
+	public Skater(HockeyPlayer hp, int gamesPlayed, int goals, int assists, int shots){
 		super(hp.getLastName(), hp.getPosition(), hp.getJersey(), hp.getTeam());
+		this.gamesPlayed = gamesPlayed;
 		this.goals = goals;
 		this.assists = assists;
 		this.shots = shots;
@@ -68,6 +71,10 @@ public class Skater extends HockeyPlayer{
 	}
 	
 	//getters
+	public int getGamesPlayed(){
+		return gamesPlayed;	
+	}
+	
 	public int getGoals(){
 		return goals;	
 	}
@@ -89,11 +96,11 @@ public class Skater extends HockeyPlayer{
 	}
 	
 	/**
-	* toString() returns the team, last name, jersey, points, and shooting percent values of a Skater object, formatted for a data table.
+	* toString() returns the team, last name, jersey, games played, goals, points, and shooting percent values of a Skater object, formatted for a data table.
 	* @return data table formatting of a Skater object's instance variable values (in the form of a String)
 	*/
 	@Override
 	public String toString(){
-		return String.format("| %-4s | %-15s | %-4s | %-7s | %-7s | %-15s |", getTeam(), getLastName(), getJersey(), goals, points, shootingPercent);
+		return String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", getTeam(), getLastName(), getJersey(), gamesPlayed, goals, points, shootingPercent);
 	}
 }
