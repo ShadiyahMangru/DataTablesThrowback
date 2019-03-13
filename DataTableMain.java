@@ -80,12 +80,16 @@ public class DataTableMain{
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "**** Welcome to Hockey Stats Data Table Wizard! ****", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "     Make a Sort By Selection", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      1.) Points", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      2.) Goals", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      3.) Shooting Percent", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      4.) Games Played", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      1.) Points: Low To High", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      2.) Points: High To Low", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      3.) Goals: Low To High", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      4.) Goals: High To Low", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      5.) Shooting Percent: Low To High", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      6.) Shooting Percent: High To Low", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      7.) Games Played: Low To High", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      8.) Games Played: High To Low", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      5.) Exit", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      9.) Exit", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
 		System.out.println("\t**********************************************************");
 		Console console = System.console();
@@ -94,23 +98,39 @@ public class DataTableMain{
 			userInput = console.readLine();
 			console.writer().println("Your selection: " + userInput);
 		}
-		if(userInput.equals("5")){
+		if(userInput.equals("9")){
 			System.exit(0);
 		}
-		else if(userInput.equals("4")){
+		else if(userInput.equals("8")){
 			sortBy = SortOptions :: compareByGPThenName; //the sort by method for the data table	
 			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP **", "Goals", "Points", "Shooting %");
 		}
-		else if(userInput.equals("3")){
+		else if(userInput.equals("7")){
+			sortBy = SortOptions :: compareByGPAscThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP **", "Goals", "Points", "Shooting %");
+		}
+		else if(userInput.equals("6")){
 			sortBy = SortOptions :: compareByShPercentThenName; //the sort by method for the data table	
 			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points", "Shooting % **");
 		}
-		else if(userInput.equals("2")){
+		else if(userInput.equals("5")){
+			sortBy = SortOptions :: compareByShPercentAscThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points", "Shooting % **");
+		}
+		else if(userInput.equals("4")){
 			sortBy = SortOptions :: compareByGoalsThenName; //the sort by method for the data table	
 			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals **", "Points", "Shooting %");
 		}
-		else{
+		else if(userInput.equals("3")){
+			sortBy = SortOptions :: compareByGoalsAscThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals **", "Points", "Shooting %");
+		}
+		else if(userInput.equals("2")){
 			sortBy = SortOptions :: compareByPointsThenName; //the sort by method for the data table	
+			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points **", "Shooting %");
+		}
+		else{
+			sortBy = SortOptions :: compareByPointsAscThenName; //the sort by method for the data table	
 			columnHeaders = String.format("| %-4s | %-15s | %-4s | %-7s | %-9s | %-9s | %-15s |", "Team", "Player", "#", "GP", "Goals", "Points **", "Shooting %");
 		}
 		printDataTable(team, sortBy);
